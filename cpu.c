@@ -29,13 +29,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Reset all CPU registers */
 void reset(cpu_t* cpu)
 {
-    cpu->a = 0;
-    cpu->b = 0;
-    cpu->c = 0;
-    cpu->d = 0;
-    cpu->e = 0;
-    cpu->h = 0;
-    cpu->l = 0;
+    REG_A = 0;
+    REG_F = 0;
+    REG_B = 0;
+    REG_C = 0;
+    REG_D = 0;
+    REG_E = 0;
+    REG_H = 0;
+    REG_L = 0;
+
     cpu->pc = 0;
     cpu->sp = 0;
 
@@ -75,10 +77,7 @@ void CB(cpu_t* cpu)
 }
 
 // No op
-void NOP(cpu_t* cpu)
-{
-
-}
+void NOP(cpu_t* cpu) {}
 
 // HALT
 void HALT(cpu_t* cpu)

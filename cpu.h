@@ -30,6 +30,38 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdint.h>
 #include "mmu.h"
 
+#define REG_AF cpu->af.word
+#define REG_BC cpu->bc.word
+#define REG_DE cpu->de.word
+#define REG_HL cpu->hl.word
+
+#ifdef _BIG_ENDIAN
+#define REG_A cpu->af.bytes.h
+#define REG_F cpu->af.bytes.l
+#define REG_B cpu->bc.bytes.h
+#define REG_C cpu->bc.bytes.l
+#define REG_D cpu->bc.bytes.h
+#define REG_E cpu->bc.bytes.l
+#define REG_H cpu->bc.bytes.h
+#define REG_L cpu->bc.bytes.l
+#else
+#define REG_A cpu->af.bytes.l
+#define REG_F cpu->af.bytes.h
+#define REG_B cpu->bc.bytes.l
+#define REG_C cpu->bc.bytes.h
+#define REG_D cpu->bc.bytes.l
+#define REG_E cpu->bc.bytes.h
+#define REG_H cpu->bc.bytes.l
+#define REG_L cpu->bc.bytes.h
+#endif
+
+typedef union {
+    uint16_t word;
+    struct {
+        uint8_t h, l;
+    } bytes;
+} reg_t;
+
 typedef struct {
     uint32_t m; // Total machine cycles
     uint32_t t; // Total clock periods
