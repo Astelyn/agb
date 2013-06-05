@@ -77,7 +77,7 @@ typedef struct {
 } cpuclock_t;
 
 typedef struct {
-    mmu_t* mmu;               /* Memory */
+    mmu_t* mmu;              /* Memory */
     cpuclock_t sys_clock;    /* Master clock */
     cpuclock_t ins_clock;    /* Last instruction clock */
     cpureg_t af, bc, de, hl; /* 8-bit registers */
