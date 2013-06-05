@@ -57,25 +57,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* Double 8-bit registers */
 typedef union {
-    uint16_t w; // 16-bit register
+    uint16_t w; /* 16-bit register */
     struct {
-        uint8_t h; // High byte
-        uint8_t l; // Low byte
+        uint8_t h; /* High byte */
+        uint8_t l; /* Low byte */
     } b;
 } cpureg_t;
 
 typedef struct {
-    uint32_t m; // Machine cycles
-    uint32_t t; // Clock periods
+    uint32_t m; /* Machine cycles */
+    uint32_t t; /* Clock periods */
 } cpuclock_t;
 
 typedef struct {
-    mmu_t mmu;               // Memory
-    cpuclock_t sys_clock;    // Master clock
-    cpuclock_t ins_clock;    // Last instruction clock
-    cpureg_t af, bc, de, hl; // 8-bit registers
-    uint16_t pc, sp;         // 16-bit registers
-    uint8_t op;              // Current opcode
+    mmu_t mmu;               /* Memory */
+    cpuclock_t sys_clock;    /* Master clock */
+    cpuclock_t ins_clock;    /* Last instruction clock */
+    cpureg_t af, bc, de, hl; /* 8-bit registers */
+    uint16_t pc, sp;         /* 16-bit registers */
+    uint8_t op;              /* Current opcode */
 } cpu_t;
 
 /* Helper functions */
@@ -86,7 +86,7 @@ uint16_t add_16_16(uint16_t a, uint16_t b);
 uint16_t add_16_8(uint16_t a, uint8_t b);
 
 /* 8-bit loads */
-// LD r <- s
+/* LD r <- s */
 void LDbb(cpu_t* cpu);
 void LDbc(cpu_t* cpu);
 void LDbd(cpu_t* cpu);
@@ -149,67 +149,67 @@ void LDdmHL(cpu_t* cpu);
 void LDemHL(cpu_t* cpu);
 void LDhmHL(cpu_t* cpu);
 void LDlmHL(cpu_t* cpu);
-// LD d <- r
+/* LD d <- r */
 void LDmHLb(cpu_t* cpu);
 void LDmHLc(cpu_t* cpu);
 void LDmHLd(cpu_t* cpu);
 void LDmHLe(cpu_t* cpu);
 void LDmHLh(cpu_t* cpu);
 void LDmHLl(cpu_t* cpu);
-// LD d <- n
+/* LD d <- n */
 void LDmHLn(cpu_t* cpu);
-// LD A <- (ss)
+/* LD A <- (ss) */
 void LDamBC(cpu_t* cpu);
 void LDamDE(cpu_t* cpu);
 void LDamHL(cpu_t* cpu);
 void LDamnn(cpu_t* cpu);
-// LD (dd) <- A
+/* LD (dd) <- A */
 void LDmBCa(cpu_t* cpu);
 void LDmDEa(cpu_t* cpu);
 void LDmHLa(cpu_t* cpu);
 void LDmnna(cpu_t* cpu);
-// LD A <- (C)
+/* LD A <- (C) */
 void LDamc(cpu_t* cpu);
-// LD (C) <- A
+/* LD (C) <- A */
 void LDmca(cpu_t* cpu);
-// LDD A <- (HL)
+/* LDD A <- (HL) */
 void LDDamHL(cpu_t* cpu);
-// LDD (HL) <- A
+/* LDD (HL) <- A */
 void LDDmHLa(cpu_t* cpu);
-// LDI A <- (HL)
+/* LDI A <- (HL) */
 void LDIamHL(cpu_t* cpu);
-// LDI (HL) <- A
+/* LDI (HL) <- A */
 void LDImHLa(cpu_t* cpu);
-// LDH (n) <- A
+/* LDH (n) <- A */
 void LDHmna(cpu_t* cpu);
-// LDH A <- (n)
+/* LDH A <- (n) */
 void LDHamn(cpu_t* cpu);
 
 /* 16-bit loads */
-// LD dd, nn
+/* LD dd, nn */
 void LDBCnn(cpu_t* cpu);
 void LDDEnn(cpu_t* cpu);
 void LDHLnn(cpu_t* cpu);
 void LDSPnn(cpu_t* cpu);
-// LD (nn), SP
+/* LD (nn), SP */
 void LDmnnSP(cpu_t* cpu);
-// LD SP, HL
+/* LD SP, HL */
 void LDSPHL(cpu_t* cpu);
-// LD HL, (SP + e)
+/* LD HL, (SP + e) */
 void LSHLSPn(cpu_t* cpu);
-// PUSH ss
+/* PUSH ss */
 void PUSHBC(cpu_t* cpu);
 void PUSHDE(cpu_t* cpu);
 void PUSHHL(cpu_t* cpu);
 void PUSHAF(cpu_t* cpu);
-// POP dd
+/* POP dd */
 void POPBC(cpu_t* cpu);
 void POPDE(cpu_t* cpu);
 void POPHL(cpu_t* cpu);
 void POPAF(cpu_t* cpu);
 
 /* 8-bit ALU */
-// ADD A, s
+/* ADD A, s */
 void ADDab(cpu_t* cpu);
 void ADDac(cpu_t* cpu);
 void ADDad(cpu_t* cpu);
@@ -219,7 +219,7 @@ void ADDal(cpu_t* cpu);
 void ADDaa(cpu_t* cpu);
 void ADDan(cpu_t* cpu);
 void ADDamHL(cpu_t* cpu);
-// ADC A, s
+/* ADC A, s */
 void ADCab(cpu_t* cpu);
 void ADCac(cpu_t* cpu);
 void ADCad(cpu_t* cpu);
@@ -229,7 +229,7 @@ void ADCal(cpu_t* cpu);
 void ADCaa(cpu_t* cpu);
 void ADCan(cpu_t* cpu);
 void ADCamHL(cpu_t* cpu);
-// SUB s
+/* SUB A, s */
 void SUBab(cpu_t* cpu);
 void SUBac(cpu_t* cpu);
 void SUBad(cpu_t* cpu);
@@ -239,7 +239,7 @@ void SUBal(cpu_t* cpu);
 void SUBaa(cpu_t* cpu);
 void SUBan(cpu_t* cpu);
 void SUBamHL(cpu_t* cpu);
-// SBC A, s
+/* SBC A, s */
 void SBCab(cpu_t* cpu);
 void SBCac(cpu_t* cpu);
 void SBCad(cpu_t* cpu);
@@ -249,7 +249,7 @@ void SBCal(cpu_t* cpu);
 void SBCaa(cpu_t* cpu);
 void SBCan(cpu_t* cpu);
 void SBCamHL(cpu_t* cpu);
-// AND s
+/* AND s */
 void ANDb(cpu_t* cpu);
 void ANDc(cpu_t* cpu);
 void ANDd(cpu_t* cpu);
@@ -259,7 +259,7 @@ void ANDl(cpu_t* cpu);
 void ANDa(cpu_t* cpu);
 void ANDn(cpu_t* cpu);
 void ANDmHL(cpu_t* cpu);
-// OR s
+/* OR s */
 void ORb(cpu_t* cpu);
 void ORc(cpu_t* cpu);
 void ORd(cpu_t* cpu);
@@ -269,7 +269,7 @@ void ORl(cpu_t* cpu);
 void ORa(cpu_t* cpu);
 void ORn(cpu_t* cpu);
 void ORmHL(cpu_t* cpu);
-// XOR s
+/* XOR s */
 void XORb(cpu_t* cpu);
 void XORc(cpu_t* cpu);
 void XORd(cpu_t* cpu);
@@ -279,7 +279,7 @@ void XORl(cpu_t* cpu);
 void XORa(cpu_t* cpu);
 void XORn(cpu_t* cpu);
 void XORmHL(cpu_t* cpu);
-// CP s
+/* CP s */
 void CPb(cpu_t* cpu);
 void CPc(cpu_t* cpu);
 void CPd(cpu_t* cpu);
@@ -289,7 +289,7 @@ void CPl(cpu_t* cpu);
 void CPa(cpu_t* cpu);
 void CPn(cpu_t* cpu);
 void CPmHL(cpu_t* cpu);
-// INC s
+/* INC s */
 void INCb(cpu_t* cpu);
 void INCc(cpu_t* cpu);
 void INCd(cpu_t* cpu);
@@ -298,7 +298,7 @@ void INCh(cpu_t* cpu);
 void INCl(cpu_t* cpu);
 void INCa(cpu_t* cpu);
 void INCmHL(cpu_t* cpu);
-// DEC s
+/* DEC s */
 void DECb(cpu_t* cpu);
 void DECc(cpu_t* cpu);
 void DECd(cpu_t* cpu);
@@ -309,26 +309,26 @@ void DECa(cpu_t* cpu);
 void DECmHL(cpu_t* cpu);
 
 /* 16-bit arithmetic */
-// ADD HL, ss
+/* ADD HL, ss */
 void ADDHLBC(cpu_t* cpu);
 void ADDHLDE(cpu_t* cpu);
 void ADDHLHL(cpu_t* cpu);
 void ADDHLSP(cpu_t* cpu);
-// ADD SP, e
+/* ADD SP, e */
 void ADDSPn(cpu_t* cpu);
-// INC ss
+/* INC ss */
 void INCBC(cpu_t* cpu);
 void INCDE(cpu_t* cpu);
 void INCHL(cpu_t* cpu);
 void INCSP(cpu_t* cpu);
-// DEC ss
+/* DEC ss */
 void DECBC(cpu_t* cpu);
 void DECDE(cpu_t* cpu);
 void DECHL(cpu_t* cpu);
 void DECSP(cpu_t* cpu);
 
 /* Misc */
-// SWAP s
+/* SWAP s */
 void SWAPb(cpu_t* cpu);
 void SWAPc(cpu_t* cpu);
 void SWAPd(cpu_t* cpu);
@@ -337,35 +337,35 @@ void SWAPh(cpu_t* cpu);
 void SWAPl(cpu_t* cpu);
 void SWAPa(cpu_t* cpu);
 void SWAPmHL(cpu_t* cpu);
-// DAA
+/* DAA */
 void DAA(cpu_t* cpu);
-// CPL
+/* CPL */
 void CPL(cpu_t* cpu);
-// CCF
+/* CCF */
 void CCF(cpu_t* cpu);
-// SCF
+/* SCF */
 void SCF(cpu_t* cpu);
-// NOP
+/* NOP */
 void NOP(cpu_t* cpu);
-// HALT
+/* HALT */
 void HALT(cpu_t* cpu);
-// STOP
+/* STOP */
 void STOP(cpu_t* cpu);
-// DI
+/* DI */
 void DI(cpu_t* cpu);
-// EI
+/* EI */
 void EI(cpu_t* cpu);
 
 /* Rotates and shifts */
-// RLCA
+/* RLCA */
 void RLCA(cpu_t* cpu);
-// RLA
+/* RLA */
 void RLA(cpu_t* cpu);
-// RRCA
+/* RRCA */
 void RRCA(cpu_t* cpu);
-// RRA
+/* RRA */
 void RRA(cpu_t* cpu);
-// RLC s
+/* RLC s */
 void RLCb(cpu_t* cpu);
 void RLCc(cpu_t* cpu);
 void RLCd(cpu_t* cpu);
@@ -374,7 +374,7 @@ void RLCh(cpu_t* cpu);
 void RLCl(cpu_t* cpu);
 void RLCa(cpu_t* cpu);
 void RLCmHL(cpu_t* cpu);
-// RL s
+/* RL s */
 void RLb(cpu_t* cpu);
 void RLc(cpu_t* cpu);
 void RLd(cpu_t* cpu);
@@ -383,7 +383,7 @@ void RLh(cpu_t* cpu);
 void RLl(cpu_t* cpu);
 void RLa(cpu_t* cpu);
 void RLmHL(cpu_t* cpu);
-// RRC s
+/* RRC s */
 void RRCb(cpu_t* cpu);
 void RRCc(cpu_t* cpu);
 void RRCd(cpu_t* cpu);
@@ -392,7 +392,7 @@ void RRCh(cpu_t* cpu);
 void RRCl(cpu_t* cpu);
 void RRCa(cpu_t* cpu);
 void RRCmHL(cpu_t* cpu);
-// RR s
+/* RR s */
 void RRb(cpu_t* cpu);
 void RRc(cpu_t* cpu);
 void RRd(cpu_t* cpu);
@@ -401,7 +401,7 @@ void RRh(cpu_t* cpu);
 void RRl(cpu_t* cpu);
 void RRa(cpu_t* cpu);
 void RRmHL(cpu_t* cpu);
-// SLA s
+/* SLA s */
 void SLAb(cpu_t* cpu);
 void SLAc(cpu_t* cpu);
 void SLAd(cpu_t* cpu);
@@ -410,7 +410,7 @@ void SLAh(cpu_t* cpu);
 void SLAl(cpu_t* cpu);
 void SLAa(cpu_t* cpu);
 void SLAmHL(cpu_t* cpu);
-// SRA s
+/* SRA s */
 void SRAb(cpu_t* cpu);
 void SRAc(cpu_t* cpu);
 void SRAd(cpu_t* cpu);
@@ -419,7 +419,7 @@ void SRAh(cpu_t* cpu);
 void SRAl(cpu_t* cpu);
 void SRAa(cpu_t* cpu);
 void SRAmHL(cpu_t* cpu);
-// SRL s
+/* SRL s */
 void SRLb(cpu_t* cpu);
 void SRLc(cpu_t* cpu);
 void SRLd(cpu_t* cpu);
@@ -430,7 +430,7 @@ void SRLa(cpu_t* cpu);
 void SRLmHL(cpu_t* cpu);
 
 /* Bit manipulation */
-// BIT b, s
+/* BIT b, s */
 void BIT0b(cpu_t* cpu);
 void BIT0c(cpu_t* cpu);
 void BIT0d(cpu_t* cpu);
@@ -495,7 +495,7 @@ void BIT7h(cpu_t* cpu);
 void BIT7l(cpu_t* cpu);
 void BIT7a(cpu_t* cpu);
 void BIT7mHL(cpu_t* cpu);
-// SET b, s
+/* SET b, s */
 void SET0b(cpu_t* cpu);
 void SET0c(cpu_t* cpu);
 void SET0d(cpu_t* cpu);
@@ -560,7 +560,7 @@ void SET7h(cpu_t* cpu);
 void SET7l(cpu_t* cpu);
 void SET7a(cpu_t* cpu);
 void SET7mHL(cpu_t* cpu);
-// RES b, s
+/* RES b, s */
 void RES0b(cpu_t* cpu);
 void RES0c(cpu_t* cpu);
 void RES0d(cpu_t* cpu);
@@ -627,34 +627,34 @@ void RES7a(cpu_t* cpu);
 void RES7mHL(cpu_t* cpu);
 
 /* Jumps */
-// JP nn
+/* JP nn */
 void JPnn(cpu_t* cpu);
-// JP cc, nn
+/* JP cc, nn */
 void JPZnn(cpu_t* cpu);
 void JPCnn(cpu_t* cpu);
 void JPNZnn(cpu_t* cpu);
 void JPNCnn(cpu_t* cpu);
-// JP (HL)
+/* JP (HL) */
 void JPmHL(cpu_t* cpu);
-// JR e
+/* JR e */
 void JRn(cpu_t* cpu);
-// JR cc, e
+/* JR cc, e */
 void JRZn(cpu_t* cpu);
 void JRCn(cpu_t* cpu);
 void JRNZn(cpu_t* cpu);
 void JRNCn(cpu_t* cpu);
 
 /* Calls */
-// CALL nn
+/* CALL nn */
 void CALLnn(cpu_t* cpu);
-// CALL cc, nn
+/* CALL cc, nn */
 void CALLZnn(cpu_t* cpu);
 void CALLCnn(cpu_t* cpu);
 void CALLNZnn(cpu_t* cpu);
 void CALLNCnn(cpu_t* cpu);
 
 /* Restarts */
-// RST f
+/* RST f */
 void RST0(cpu_t* cpu);
 void RST8(cpu_t* cpu);
 void RST10(cpu_t* cpu);
@@ -665,14 +665,14 @@ void RST30(cpu_t* cpu);
 void RST38(cpu_t* cpu);
 
 /* Returns */
-// RET
+/* RET */
 void RET(cpu_t* cpu);
-// RET cc
+/* RET cc */
 void RETZ(cpu_t* cpu);
 void RETC(cpu_t* cpu);
 void RETNZ(cpu_t* cpu);
 void RETNC(cpu_t* cpu);
-// RETI
+/* RETI */
 void RETI(cpu_t* cpu);
 
 /* Table of function pointers indexed by opcode */
@@ -718,14 +718,14 @@ void (*cb_ops[256])(cpu_t*) = {
 };
 
 /* M clock values */
-//uint8_t timings_m[256] = {
+/* uint8_t timings_m[256] = {
 
-//};
+}; */
 
 /* T clock values */
-//uint8_t timings_t[256] = {
+/* uint8_t timings_t[256] = {
 
-//};
+}; */
 
 #endif
 

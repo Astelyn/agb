@@ -78,7 +78,7 @@ uint16_t add_16_8(uint16_t a, uint8_t b)
 }
 
 /* 8-bit loads */
-// LD r <- s
+/* LD r <- s */
 void LDbb() { REG_B = REG_B; }
 void LDbc() { REG_B = REG_C; }
 void LDbd() { REG_B = REG_D; }
@@ -141,67 +141,67 @@ void LDdmHL() { REG_D = read_8(REG_HL); }
 void LDemHL() { REG_E = read_8(REG_HL); }
 void LDhmHL() { REG_H = read_8(REG_HL); }
 void LDlmHL() { REG_L = read_8(REG_HL); }
-// LD d <- r
+/* LD d <- r */
 void LDmHLb() { write_8(REG_HL, REG_B); }
 void LDmHLc() { write_8(REG_HL, REG_C); }
 void LDmHLd() { write_8(REG_HL, REG_D); }
 void LDmHLe() { write_8(REG_HL, REG_E); }
 void LDmHLh() { write_8(REG_HL, REG_H); }
 void LDmHLl() { write_8(REG_HL, REG_L); }
-// LD d <- n
+/* LD d <- n */
 void LDmHLn() { write_8(REG_HL, read_8(REG_PC++)); }
-// LD A <- (ss)
+/* LD A <- (ss) */
 void LDamBC() { REG_A = read_8(REG_BC); }
 void LDamDE() { REG_A = read_8(REG_DE); }
 void LDamHL() { REG_A = read_8(REG_HL); }
 void LDamnn() { REG_A = read_8(read_16(REG_PC)); REG_PC += 2; }
-// LD (dd) <- A
+/* LD (dd) <- A */
 void LDmBCa() { write_8(read_16(REG_BC), REG_A); }
 void LDmDEa() { write_8(read_16(REG_DE), REG_A); }
 void LDmHLa() { write_8(read_16(REG_HL), REG_A); }
 void LDmnna() { write_8(read_16(REG_PC), REG_A); REG_PC += 2; }
-// LD A <- (C)
+/* LD A <- (C) */
 void LDamc() { REG_A = read_8(REG_C); }
-// LD (C) <- A
+/* LD (C) <- A */
 void LDmca() { write_8(read8(REG_C), REG_A); }
-// LDD A <- (HL)
+/* LDD A <- (HL) */
 void LDDamHL() { REG_A = read_8(REG_HL--); }
-// LDD (HL) <- A
+/* LDD (HL) <- A */
 void LDDmHLa() { write_8(REG_HL--, REG_A); }
-// LDI A <- (HL)
+/* LDI A <- (HL) */
 void LDIamHL() { REG_A = read_8(REG_HL++); }
-// LDI (HL) <- A
+/* LDI (HL) <- A */
 void LDImHLa() { write_8(REG_HL++, REG_A); }
-// LDH (n) <- A
+/* LDH (n) <- A */
 void LDHmna() { write_8(read_8(REG_PC++) + 0xFF00, REG_A); }
-// LDH A <- (n)
+/* LDH A <- (n) */
 void LDHamn() { REG_A = read_8(0xFF00 + read_8(REG_PC++)); }
 
 /* 16-bit loads */
-// LD dd, nn
+/* LD dd, nn */
 void LDBCnn() { REG_BC = read_16(REG_PC); REG_PC += 2; }
 void LDDEnn() { REG_DE = read_16(REG_PC); REG_PC += 2; }
 void LDHLnn() { REG_HL = read_16(REG_PC); REG_PC += 2; }
 void LDSPnn() { REG_SP = read_16(REG_PC); REG_PC += 2; }
-// LD (nn), SP
+/* LD (nn), SP */
 void LDmnnSP() { write_16(read_16(REG_PC), REG_SP); REG_PC += 2; }
-// LD SP, HL
+/* LD SP, HL */
 void LDSPHL() { REG_SP = REG_HL; }
-// LD HL, (SP + e)
+/* LD HL, (SP + e) */
 void LSHLSPn() {  }
-// PUSH ss
+/* PUSH ss */
 void PUSHBC() { push(REG_BC); }
 void PUSHDE() { push(REG_DE); }
 void PUSHHL() { push(REG_HL); }
 void PUSHAF() { push(REG_AF); }
-// POP dd
+/* POP dd */
 void POPBC() { REG_BC = pop(); }
 void POPDE() { REG_DE = pop(); }
 void POPHL() { REG_HL = pop(); }
 void POPAF() { REG_AF = pop(); }
 
 /* 8-bit ALU */
-// ADD A, s
+/* ADD A, s */
 void ADDab() { REG_A = add_8_8(REG_A, REG_B); }
 void ADDac() { REG_A = add_8_8(REG_A, REG_C); }
 void ADDad() { REG_A = add_8_8(REG_A, REG_D); }
@@ -211,7 +211,7 @@ void ADDal() { REG_A = add_8_8(REG_A, REG_L); }
 void ADDaa() { REG_A = add_8_8(REG_A, REG_A); }
 void ADDan() { REG_A = add_8_8(REG_A, read8(REG_PC++); }
 void ADDamHL() { REG_A = add_8_8(REG_A, read8(REG_HL)); }
-// ADC A, s
+/* ADC A, s */
 void ADCab() {  }
 void ADCac() {  }
 void ADCad() {  }
@@ -221,7 +221,7 @@ void ADCal() {  }
 void ADCaa() {  }
 void ADCan() {  }
 void ADCamHL() {  }
-// SUB s
+/* SUB s */
 void SUBab() {  }
 void SUBac() {  }
 void SUBad() {  }
@@ -231,7 +231,7 @@ void SUBal() {  }
 void SUBaa() {  }
 void SUBan() {  }
 void SUBamHL() {  }
-// SBC A, s
+/* SBC A, s */
 void SBCab() {  }
 void SBCac() {  }
 void SBCad() {  }
@@ -241,7 +241,7 @@ void SBCal() {  }
 void SBCaa() {  }
 void SBCan() {  }
 void SBCamHL() {  }
-// AND s
+/* AND s */
 void ANDb() {  }
 void ANDc() {  }
 void ANDd() {  }
@@ -251,7 +251,7 @@ void ANDl() {  }
 void ANDa() {  }
 void ANDn() {  }
 void ANDmHL() {  }
-// OR s
+/* OR s */
 void ORb() {  }
 void ORc() {  }
 void ORd() {  }
@@ -261,7 +261,7 @@ void ORl() {  }
 void ORa() {  }
 void ORn() {  }
 void ORmHL() {  }
-// XOR s
+/* XOR s */
 void XORb() {  }
 void XORc() {  }
 void XORd() {  }
@@ -271,7 +271,7 @@ void XORl() {  }
 void XORa() {  }
 void XORn() {  }
 void XORmHL() {  }
-// CP s
+/* CP s */
 void CPb() {  }
 void CPc() {  }
 void CPd() {  }
@@ -281,7 +281,7 @@ void CPl() {  }
 void CPa() {  }
 void CPn() {  }
 void CPmHL() {  }
-// INC s
+/* INC s */
 void INCb() {  }
 void INCc() {  }
 void INCd() {  }
@@ -290,7 +290,7 @@ void INCh() {  }
 void INCl() {  }
 void INCa() {  }
 void INCmHL() {  }
-// DEC s
+/* DEC s */
 void DECb() {  }
 void DECc() {  }
 void DECd() {  }
@@ -301,26 +301,26 @@ void DECa() {  }
 void DECmHL() {  }
 
 /* 16-bit arithmetic */
-// ADD HL, ss
+/* ADD HL, ss */
 void ADDHLBC() {  }
 void ADDHLDE() {  }
 void ADDHLHL() {  }
 void ADDHLSP() {  }
-// ADD SP, e
+/* ADD SP, e */
 void ADDSPn() {  }
-// INC ss
+/* INC ss */
 void INCBC() {  }
 void INCDE() {  }
 void INCHL() {  }
 void INCSP() {  }
-// DEC ss
+/* DEC ss */
 void DECBC() {  }
 void DECDE() {  }
 void DECHL() {  }
 void DECSP() {  }
 
 /* Misc */
-// SWAP s
+/* SWAP s */
 void SWAPb() {  }
 void SWAPc() {  }
 void SWAPd() {  }
@@ -329,35 +329,35 @@ void SWAPh() {  }
 void SWAPl() {  }
 void SWAPa() {  }
 void SWAPmHL() {  }
-// DAA
+/* DAA */
 void DAA() {  }
-// CPL
+/* CPL */
 void CPL() {  }
-// CCF
+/* CCF */
 void CCF() {  }
-// SCF
+/* SCF */
 void SCF() {  }
-// NOP
+/* NOP */
 void NOP() {  }
-// HALT
+/* HALT */
 void HALT() {  }
-// STOP
+/* STOP */
 void STOP() {  }
-// DI
+/* DI */
 void DI() {  }
-// EI
+/* EI */
 void EI() {  }
 
 /* Rotates and shifts */
-// RLCA
+/* RLCA */
 void RLCA() {  }
-// RLA
+/* RLA */
 void RLA() {  }
-// RRCA
+/* RRCA */
 void RRCA() {  }
-// RRA
+/* RRA */
 void RRA() {  }
-// RLC s
+/* RLC s */
 void RLCb() {  }
 void RLCc() {  }
 void RLCd() {  }
@@ -366,7 +366,7 @@ void RLCh() {  }
 void RLCl() {  }
 void RLCa() {  }
 void RLCmHL() {  }
-// RL s
+/* RL s */
 void RLb() {  }
 void RLc() {  }
 void RLd() {  }
@@ -375,7 +375,7 @@ void RLh() {  }
 void RLl() {  }
 void RLa() {  }
 void RLmHL() {  }
-// RRC s
+/* RRC s */
 void RRCb() {  }
 void RRCc() {  }
 void RRCd() {  }
@@ -384,7 +384,7 @@ void RRCh() {  }
 void RRCl() {  }
 void RRCa() {  }
 void RRCmHL() {  }
-// RR s
+/* RR s */
 void RRb() {  }
 void RRc() {  }
 void RRd() {  }
@@ -393,7 +393,7 @@ void RRh() {  }
 void RRl() {  }
 void RRa() {  }
 void RRmHL() {  }
-// SLA s
+/* SLA s */
 void SLAb() {  }
 void SLAc() {  }
 void SLAd() {  }
@@ -402,7 +402,7 @@ void SLAh() {  }
 void SLAl() {  }
 void SLAa() {  }
 void SLAmHL() {  }
-// SRA s
+/* SRA s */
 void SRAb() {  }
 void SRAc() {  }
 void SRAd() {  }
@@ -411,7 +411,7 @@ void SRAh() {  }
 void SRAl() {  }
 void SRAa() {  }
 void SRAmHL() {  }
-// SRL s
+/* SRL s */
 void SRLb() {  }
 void SRLc() {  }
 void SRLd() {  }
@@ -422,7 +422,7 @@ void SRLa() {  }
 void SRLmHL() {  }
 
 /* Bit manipulation */
-// BIT b, s
+/* BIT b, s */
 void BIT0b() {  }
 void BIT0c() {  }
 void BIT0d() {  }
@@ -487,7 +487,7 @@ void BIT7h() {  }
 void BIT7l() {  }
 void BIT7a() {  }
 void BIT7mHL() {  }
-// SET b, s
+/* SET b, s */
 void SET0b() {  }
 void SET0c() {  }
 void SET0d() {  }
@@ -552,7 +552,7 @@ void SET7h() {  }
 void SET7l() {  }
 void SET7a() {  }
 void SET7mHL() {  }
-// RES b, s
+/* RES b, s */
 void RES0b() {  }
 void RES0c() {  }
 void RES0d() {  }
@@ -619,34 +619,34 @@ void RES7a() {  }
 void RES7mHL() {  }
 
 /* Jumps */
-// JP nn
+/* JP nn */
 void JPnn() {  }
-// JP cc, nn
+/* JP cc, nn */
 void JPZnn() {  }
 void JPCnn() {  }
 void JPNZnn() {  }
 void JPNCnn() {  }
-// JP (HL)
+/* JP (HL) */
 void JPmHL() {  }
-// JR e
+/* JR e */
 void JRn() {  }
-// JR cc, e
+/* JR cc, e */
 void JRZn() {  }
 void JRCn() {  }
 void JRNZn() {  }
 void JRNCn() {  }
 
 /* Calls */
-// CALL nn
+/* CALL nn */
 void CALLnn() {  }
-// CALL cc, nn
+/* CALL cc, nn */
 void CALLZnn() {  }
 void CALLCnn() {  }
 void CALLNZnn() {  }
 void CALLNCnn() {  }
 
 /* Restarts */
-// RST f
+/* RST f */
 void RST0() {  }
 void RST8() {  }
 void RST10() {  }
@@ -657,13 +657,13 @@ void RST30() {  }
 void RST38() {  }
 
 /* Returns */
-// RET
+/* RET */
 void RET() {  }
-// RET cc
+/* RET cc */
 void RETZ() {  }
 void RETC() {  }
 void RETNZ() {  }
 void RETNC() {  }
-// RETI
+/* RETI */
 void RETI() {  }
 
