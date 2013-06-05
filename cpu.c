@@ -1,592 +1,621 @@
+/*
+
+Copyright 2013 Allie Saia <allie@fcraft.net>
+    https://github.com/astelyn
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
+
 #include "cpu.h"
+
+/* Global CPU structure */
+cpu_t cpu;
 
 /* 8-bit loads */
 // LD r <- s
-void LDbb(cpu_t* cpu) { REG_B = REG_B; }
-void LDbc(cpu_t* cpu) { REG_B = REG_C; }
-void LDbd(cpu_t* cpu) { REG_B = REG_D; }
-void LDbe(cpu_t* cpu) { REG_B = REG_E; }
-void LDbh(cpu_t* cpu) { REG_B = REG_H; }
-void LDbl(cpu_t* cpu) { REG_B = REG_L; }
-void LDba(cpu_t* cpu) { REG_B = REG_A; }
-void LDcb(cpu_t* cpu) { REG_C = REG_B; }
-void LDcc(cpu_t* cpu) { REG_C = REG_C; }
-void LDcd(cpu_t* cpu) { REG_C = REG_D; }
-void LDce(cpu_t* cpu) { REG_C = REG_E; }
-void LDch(cpu_t* cpu) { REG_C = REG_H; }
-void LDcl(cpu_t* cpu) { REG_C = REG_L; }
-void LDca(cpu_t* cpu) { REG_C = REG_A; }
-void LDdb(cpu_t* cpu) { REG_D = REG_B; }
-void LDdc(cpu_t* cpu) { REG_D = REG_C; }
-void LDdd(cpu_t* cpu) { REG_D = REG_D; }
-void LDde(cpu_t* cpu) { REG_D = REG_E; }
-void LDdh(cpu_t* cpu) { REG_D = REG_H; }
-void LDdl(cpu_t* cpu) { REG_D = REG_L; }
-void LDda(cpu_t* cpu) { REG_D = REG_A; }
-void LDeb(cpu_t* cpu) {  }
-void LDec(cpu_t* cpu) {  }
-void LDed(cpu_t* cpu) {  }
-void LDee(cpu_t* cpu) {  }
-void LDeh(cpu_t* cpu) {  }
-void LDel(cpu_t* cpu) {  }
-void LDea(cpu_t* cpu) {  }
-void LDhb(cpu_t* cpu) {  }
-void LDhc(cpu_t* cpu) {  }
-void LDhd(cpu_t* cpu) {  }
-void LDhe(cpu_t* cpu) {  }
-void LDhh(cpu_t* cpu) {  }
-void LDhl(cpu_t* cpu) {  }
-void LDha(cpu_t* cpu) {  }
-void LDlb(cpu_t* cpu) {  }
-void LDlc(cpu_t* cpu) {  }
-void LDld(cpu_t* cpu) {  }
-void LDle(cpu_t* cpu) {  }
-void LDlh(cpu_t* cpu) {  }
-void LDll(cpu_t* cpu) {  }
-void LDla(cpu_t* cpu) {  }
-void LDab(cpu_t* cpu) {  }
-void LDac(cpu_t* cpu) {  }
-void LDad(cpu_t* cpu) {  }
-void LDae(cpu_t* cpu) {  }
-void LDah(cpu_t* cpu) {  }
-void LDal(cpu_t* cpu) {  }
-void LDaa(cpu_t* cpu) {  }
-void LDbn(cpu_t* cpu) {  }
-void LDcn(cpu_t* cpu) {  }
-void LDdn(cpu_t* cpu) {  }
-void LDen(cpu_t* cpu) {  }
-void LDhn(cpu_t* cpu) {  }
-void LDln(cpu_t* cpu) {  }
-void LDan(cpu_t* cpu) {  }
-void LDbmHL(cpu_t* cpu) {  }
-void LDcmHL(cpu_t* cpu) {  }
-void LDdmHL(cpu_t* cpu) {  }
-void LDemHL(cpu_t* cpu) {  }
-void LDhmHL(cpu_t* cpu) {  }
-void LDlmHL(cpu_t* cpu) {  }
+void LDbb() { REG_B = REG_B; }
+void LDbc() { REG_B = REG_C; }
+void LDbd() { REG_B = REG_D; }
+void LDbe() { REG_B = REG_E; }
+void LDbh() { REG_B = REG_H; }
+void LDbl() { REG_B = REG_L; }
+void LDba() { REG_B = REG_A; }
+void LDcb() { REG_C = REG_B; }
+void LDcc() { REG_C = REG_C; }
+void LDcd() { REG_C = REG_D; }
+void LDce() { REG_C = REG_E; }
+void LDch() { REG_C = REG_H; }
+void LDcl() { REG_C = REG_L; }
+void LDca() { REG_C = REG_A; }
+void LDdb() { REG_D = REG_B; }
+void LDdc() { REG_D = REG_C; }
+void LDdd() { REG_D = REG_D; }
+void LDde() { REG_D = REG_E; }
+void LDdh() { REG_D = REG_H; }
+void LDdl() { REG_D = REG_L; }
+void LDda() { REG_D = REG_A; }
+void LDeb() { REG_E = REG_B; }
+void LDec() { REG_E = REG_C; }
+void LDed() { REG_E = REG_D; }
+void LDee() { REG_E = REG_E; }
+void LDeh() { REG_E = REG_H; }
+void LDel() { REG_E = REG_L; }
+void LDea() { REG_E = REG_A; }
+void LDhb() { REG_H = REG_B; }
+void LDhc() { REG_H = REG_C; }
+void LDhd() { REG_H = REG_D; }
+void LDhe() { REG_H = REG_E; }
+void LDhh() { REG_H = REG_H; }
+void LDhl() { REG_H = REG_L; }
+void LDha() { REG_H = REG_A; }
+void LDlb() { REG_L = REG_B; }
+void LDlc() { REG_L = REG_C; }
+void LDld() { REG_L = REG_D; }
+void LDle() { REG_L = REG_E; }
+void LDlh() { REG_L = REG_H; }
+void LDll() { REG_L = REG_L; }
+void LDla() { REG_L = REG_A; }
+void LDab() { REG_A = REG_B; }
+void LDac() { REG_A = REG_C; }
+void LDad() { REG_A = REG_D; }
+void LDae() { REG_A = REG_E; }
+void LDah() { REG_A = REG_H; }
+void LDal() { REG_A = REG_L; }
+void LDaa() { REG_A = REG_A; }
+void LDbn() { REG_B = read_8(REG_PC++); }
+void LDcn() { REG_C = read_8(REG_PC++); }
+void LDdn() { REG_D = read_8(REG_PC++); }
+void LDen() { REG_E = read_8(REG_PC++); }
+void LDhn() { REG_H = read_8(REG_PC++); }
+void LDln() { REG_L = read_8(REG_PC++); }
+void LDan() { REG_A = read_8(REG_PC++); }
+void LDbmHL() { REG_B = read_8(REG_HL); }
+void LDcmHL() { REG_C = read_8(REG_HL); }
+void LDdmHL() { REG_D = read_8(REG_HL); }
+void LDemHL() { REG_E = read_8(REG_HL); }
+void LDhmHL() { REG_H = read_8(REG_HL); }
+void LDlmHL() { REG_L = read_8(REG_HL); }
 // LD d <- r
-void LDmHLb(cpu_t* cpu) {  }
-void LDmHLc(cpu_t* cpu) {  }
-void LDmHLd(cpu_t* cpu) {  }
-void LDmHLe(cpu_t* cpu) {  }
-void LDmHLh(cpu_t* cpu) {  }
-void LDmHLl(cpu_t* cpu) {  }
+void LDmHLb() { write_8(REG_HL, REG_B); }
+void LDmHLc() { write_8(REG_HL, REG_C); }
+void LDmHLd() { write_8(REG_HL, REG_D); }
+void LDmHLe() { write_8(REG_HL, REG_E); }
+void LDmHLh() { write_8(REG_HL, REG_H); }
+void LDmHLl() { write_8(REG_HL, REG_L); }
 // LD d <- n
-void LDmHLn(cpu_t* cpu) {  }
+void LDmHLn() { write_8(REG_HL, read_8(REG_PC++)); }
 // LD A <- (ss)
-void LDamBC(cpu_t* cpu) {  }
-void LDamDE(cpu_t* cpu) {  }
-void LDamHL(cpu_t* cpu) {  }
-void LDamnn(cpu_t* cpu) {  }
+void LDamBC() { REG_A = read_8(REG_BC); }
+void LDamDE() { REG_A = read_8(REG_DE); }
+void LDamHL() { REG_A = read_8(REG_HL); }
+void LDamnn() { REG_A = read_8(read_16(REG_PC)); REG_PC += 2; }
 // LD (dd) <- A
-void LDmBCa(cpu_t* cpu) {  }
-void LDmDEa(cpu_t* cpu) {  }
-void LDmHLa(cpu_t* cpu) {  }
-void LDmnna(cpu_t* cpu) {  }
+void LDmBCa() { write_8(read_16(REG_BC), REG_A); }
+void LDmDEa() { write_8(read_16(REG_DE), REG_A); }
+void LDmHLa() { write_8(read_16(REG_HL), REG_A); }
+void LDmnna() { write_8(read_16(REG_PC), REG_A); REG_PC += 2; }
 // LD A <- (C)
-void LDamc(cpu_t* cpu) {  }
+void LDamc() { REG_A = read_8(REG_C); }
 // LD (C) <- A
-void LDmca(cpu_t* cpu) {  }
+void LDmca() { write_8(read8(REG_C), REG_A); }
 // LDD A <- (HL)
-void LDDamHL(cpu_t* cpu) {  }
+void LDDamHL() { REG_A = read_8(REG_HL--); }
 // LDD (HL) <- A
-void LDDmHLa(cpu_t* cpu) {  }
+void LDDmHLa() { write_8(REG_HL--, REG_A); }
 // LDI A <- (HL)
-void LDIamHL(cpu_t* cpu) {  }
+void LDIamHL() { REG_A = read_8(REG_HL++); }
 // LDI (HL) <- A
-void LDImHLa(cpu_t* cpu) {  }
+void LDImHLa() { write_8(REG_HL++, REG_A); }
 // LDH (n) <- A
-void LDHmna(cpu_t* cpu) {  }
+void LDHmna() { write_8(read_8(REG_PC++) + 0xFF00, REG_A); }
 // LDH A <- (n)
-void LDHamn(cpu_t* cpu) {  }
+void LDHamn() { REG_A = read_8(0xFF00 + read_8(REG_PC++)); }
 
 /* 16-bit loads */
 // LD dd, nn
-void LDBCnn(cpu_t* cpu) {  }
-void LDDEnn(cpu_t* cpu) {  }
-void LDHLnn(cpu_t* cpu) {  }
-void LDSPnn(cpu_t* cpu) {  }
+void LDBCnn() {  }
+void LDDEnn() {  }
+void LDHLnn() {  }
+void LDSPnn() {  }
 // LD (nn), SP
-void LDmnnSP(cpu_t* cpu) {  }
+void LDmnnSP() {  }
 // LD SP, HL
-void LDSPHL(cpu_t* cpu) {  }
+void LDSPHL() {  }
 // LD HL, (SP + e)
-void LSHLSPn(cpu_t* cpu) {  }
+void LSHLSPn() {  }
 // PUSH ss
-void PUSHBC(cpu_t* cpu) {  }
-void PUSHDE(cpu_t* cpu) {  }
-void PUSHHL(cpu_t* cpu) {  }
-void PUSHAF(cpu_t* cpu) {  }
+void PUSHBC() {  }
+void PUSHDE() {  }
+void PUSHHL() {  }
+void PUSHAF() {  }
 // POP dd
-void POPBC(cpu_t* cpu) {  }
-void POPDE(cpu_t* cpu) {  }
-void POPHL(cpu_t* cpu) {  }
-void POPAF(cpu_t* cpu) {  }
+void POPBC() {  }
+void POPDE() {  }
+void POPHL() {  }
+void POPAF() {  }
 
 /* 8-bit ALU */
 // ADD A, s
-void ADDab(cpu_t* cpu) {  }
-void ADDac(cpu_t* cpu) {  }
-void ADDad(cpu_t* cpu) {  }
-void ADDae(cpu_t* cpu) {  }
-void ADDah(cpu_t* cpu) {  }
-void ADDal(cpu_t* cpu) {  }
-void ADDaa(cpu_t* cpu) {  }
-void ADDan(cpu_t* cpu) {  }
-void ADDamHL(cpu_t* cpu) {  }
+void ADDab() {  }
+void ADDac() {  }
+void ADDad() {  }
+void ADDae() {  }
+void ADDah() {  }
+void ADDal() {  }
+void ADDaa() {  }
+void ADDan() {  }
+void ADDamHL() {  }
 // ADC A, s
-void ADCab(cpu_t* cpu) {  }
-void ADCac(cpu_t* cpu) {  }
-void ADCad(cpu_t* cpu) {  }
-void ADCae(cpu_t* cpu) {  }
-void ADCah(cpu_t* cpu) {  }
-void ADCal(cpu_t* cpu) {  }
-void ADCaa(cpu_t* cpu) {  }
-void ADCan(cpu_t* cpu) {  }
-void ADCamHL(cpu_t* cpu) {  }
+void ADCab() {  }
+void ADCac() {  }
+void ADCad() {  }
+void ADCae() {  }
+void ADCah() {  }
+void ADCal() {  }
+void ADCaa() {  }
+void ADCan() {  }
+void ADCamHL() {  }
 // SUB s
-void SUBab(cpu_t* cpu) {  }
-void SUBac(cpu_t* cpu) {  }
-void SUBad(cpu_t* cpu) {  }
-void SUBae(cpu_t* cpu) {  }
-void SUBah(cpu_t* cpu) {  }
-void SUBal(cpu_t* cpu) {  }
-void SUBaa(cpu_t* cpu) {  }
-void SUBan(cpu_t* cpu) {  }
-void SUBamHL(cpu_t* cpu) {  }
+void SUBab() {  }
+void SUBac() {  }
+void SUBad() {  }
+void SUBae() {  }
+void SUBah() {  }
+void SUBal() {  }
+void SUBaa() {  }
+void SUBan() {  }
+void SUBamHL() {  }
 // SBC A, s
-void SBCab(cpu_t* cpu) {  }
-void SBCac(cpu_t* cpu) {  }
-void SBCad(cpu_t* cpu) {  }
-void SBCae(cpu_t* cpu) {  }
-void SBCah(cpu_t* cpu) {  }
-void SBCal(cpu_t* cpu) {  }
-void SBCaa(cpu_t* cpu) {  }
-void SBCan(cpu_t* cpu) {  }
-void SBCamHL(cpu_t* cpu) {  }
+void SBCab() {  }
+void SBCac() {  }
+void SBCad() {  }
+void SBCae() {  }
+void SBCah() {  }
+void SBCal() {  }
+void SBCaa() {  }
+void SBCan() {  }
+void SBCamHL() {  }
 // AND s
-void ANDb(cpu_t* cpu) {  }
-void ANDc(cpu_t* cpu) {  }
-void ANDd(cpu_t* cpu) {  }
-void ANDe(cpu_t* cpu) {  }
-void ANDh(cpu_t* cpu) {  }
-void ANDl(cpu_t* cpu) {  }
-void ANDa(cpu_t* cpu) {  }
-void ANDn(cpu_t* cpu) {  }
-void ANDmHL(cpu_t* cpu) {  }
+void ANDb() {  }
+void ANDc() {  }
+void ANDd() {  }
+void ANDe() {  }
+void ANDh() {  }
+void ANDl() {  }
+void ANDa() {  }
+void ANDn() {  }
+void ANDmHL() {  }
 // OR s
-void ORb(cpu_t* cpu) {  }
-void ORc(cpu_t* cpu) {  }
-void ORd(cpu_t* cpu) {  }
-void ORe(cpu_t* cpu) {  }
-void ORh(cpu_t* cpu) {  }
-void ORl(cpu_t* cpu) {  }
-void ORa(cpu_t* cpu) {  }
-void ORn(cpu_t* cpu) {  }
-void ORmHL(cpu_t* cpu) {  }
+void ORb() {  }
+void ORc() {  }
+void ORd() {  }
+void ORe() {  }
+void ORh() {  }
+void ORl() {  }
+void ORa() {  }
+void ORn() {  }
+void ORmHL() {  }
 // XOR s
-void XORb(cpu_t* cpu) {  }
-void XORc(cpu_t* cpu) {  }
-void XORd(cpu_t* cpu) {  }
-void XORe(cpu_t* cpu) {  }
-void XORh(cpu_t* cpu) {  }
-void XORl(cpu_t* cpu) {  }
-void XORa(cpu_t* cpu) {  }
-void XORn(cpu_t* cpu) {  }
-void XORmHL(cpu_t* cpu) {  }
+void XORb() {  }
+void XORc() {  }
+void XORd() {  }
+void XORe() {  }
+void XORh() {  }
+void XORl() {  }
+void XORa() {  }
+void XORn() {  }
+void XORmHL() {  }
 // CP s
-void CPb(cpu_t* cpu) {  }
-void CPc(cpu_t* cpu) {  }
-void CPd(cpu_t* cpu) {  }
-void CPe(cpu_t* cpu) {  }
-void CPh(cpu_t* cpu) {  }
-void CPl(cpu_t* cpu) {  }
-void CPa(cpu_t* cpu) {  }
-void CPn(cpu_t* cpu) {  }
-void CPmHL(cpu_t* cpu) {  }
+void CPb() {  }
+void CPc() {  }
+void CPd() {  }
+void CPe() {  }
+void CPh() {  }
+void CPl() {  }
+void CPa() {  }
+void CPn() {  }
+void CPmHL() {  }
 // INC s
-void INCb(cpu_t* cpu) {  }
-void INCc(cpu_t* cpu) {  }
-void INCd(cpu_t* cpu) {  }
-void INCe(cpu_t* cpu) {  }
-void INCh(cpu_t* cpu) {  }
-void INCl(cpu_t* cpu) {  }
-void INCa(cpu_t* cpu) {  }
-void INCmHL(cpu_t* cpu) {  }
+void INCb() {  }
+void INCc() {  }
+void INCd() {  }
+void INCe() {  }
+void INCh() {  }
+void INCl() {  }
+void INCa() {  }
+void INCmHL() {  }
 // DEC s
-void DECb(cpu_t* cpu) {  }
-void DECc(cpu_t* cpu) {  }
-void DECd(cpu_t* cpu) {  }
-void DECe(cpu_t* cpu) {  }
-void DECh(cpu_t* cpu) {  }
-void DECl(cpu_t* cpu) {  }
-void DECa(cpu_t* cpu) {  }
-void DECmHL(cpu_t* cpu) {  }
+void DECb() {  }
+void DECc() {  }
+void DECd() {  }
+void DECe() {  }
+void DECh() {  }
+void DECl() {  }
+void DECa() {  }
+void DECmHL() {  }
 
 /* 16-bit arithmetic */
 // ADD HL, ss
-void ADDHLBC(cpu_t* cpu) {  }
-void ADDHLDE(cpu_t* cpu) {  }
-void ADDHLHL(cpu_t* cpu) {  }
-void ADDHLSP(cpu_t* cpu) {  }
+void ADDHLBC() {  }
+void ADDHLDE() {  }
+void ADDHLHL() {  }
+void ADDHLSP() {  }
 // ADD SP, e
-void ADDSPn(cpu_t* cpu) {  }
+void ADDSPn() {  }
 // INC ss
-void INCBC(cpu_t* cpu) {  }
-void INCDE(cpu_t* cpu) {  }
-void INCHL(cpu_t* cpu) {  }
-void INCSP(cpu_t* cpu) {  }
+void INCBC() {  }
+void INCDE() {  }
+void INCHL() {  }
+void INCSP() {  }
 // DEC ss
-void DECBC(cpu_t* cpu) {  }
-void DECDE(cpu_t* cpu) {  }
-void DECHL(cpu_t* cpu) {  }
-void DECSP(cpu_t* cpu) {  }
+void DECBC() {  }
+void DECDE() {  }
+void DECHL() {  }
+void DECSP() {  }
 
 /* Misc */
 // SWAP s
-void SWAPb(cpu_t* cpu) {  }
-void SWAPc(cpu_t* cpu) {  }
-void SWAPd(cpu_t* cpu) {  }
-void SWAPe(cpu_t* cpu) {  }
-void SWAPh(cpu_t* cpu) {  }
-void SWAPl(cpu_t* cpu) {  }
-void SWAPa(cpu_t* cpu) {  }
-void SWAPmHL(cpu_t* cpu) {  }
+void SWAPb() {  }
+void SWAPc() {  }
+void SWAPd() {  }
+void SWAPe() {  }
+void SWAPh() {  }
+void SWAPl() {  }
+void SWAPa() {  }
+void SWAPmHL() {  }
 // DAA
-void DAA(cpu_t* cpu) {  }
+void DAA() {  }
 // CPL
-void CPL(cpu_t* cpu) {  }
+void CPL() {  }
 // CCF
-void CCF(cpu_t* cpu) {  }
+void CCF() {  }
 // SCF
-void SCF(cpu_t* cpu) {  }
+void SCF() {  }
 // NOP
-void NOP(cpu_t* cpu) {  }
+void NOP() {  }
 // HALT
-void HALT(cpu_t* cpu) {  }
+void HALT() {  }
 // STOP
-void STOP(cpu_t* cpu) {  }
+void STOP() {  }
 // DI
-void DI(cpu_t* cpu) {  }
+void DI() {  }
 // EI
-void EI(cpu_t* cpu) {  }
+void EI() {  }
 
 /* Rotates and shifts */
 // RLCA
-void RLCA(cpu_t* cpu) {  }
+void RLCA() {  }
 // RLA
-void RLA(cpu_t* cpu) {  }
+void RLA() {  }
 // RRCA
-void RRCA(cpu_t* cpu) {  }
+void RRCA() {  }
 // RRA
-void RRA(cpu_t* cpu) {  }
+void RRA() {  }
 // RLC s
-void RLCb(cpu_t* cpu) {  }
-void RLCc(cpu_t* cpu) {  }
-void RLCd(cpu_t* cpu) {  }
-void RLCe(cpu_t* cpu) {  }
-void RLCh(cpu_t* cpu) {  }
-void RLCl(cpu_t* cpu) {  }
-void RLCa(cpu_t* cpu) {  }
-void RLCmHL(cpu_t* cpu) {  }
+void RLCb() {  }
+void RLCc() {  }
+void RLCd() {  }
+void RLCe() {  }
+void RLCh() {  }
+void RLCl() {  }
+void RLCa() {  }
+void RLCmHL() {  }
 // RL s
-void RLb(cpu_t* cpu) {  }
-void RLc(cpu_t* cpu) {  }
-void RLd(cpu_t* cpu) {  }
-void RLe(cpu_t* cpu) {  }
-void RLh(cpu_t* cpu) {  }
-void RLl(cpu_t* cpu) {  }
-void RLa(cpu_t* cpu) {  }
-void RLmHL(cpu_t* cpu) {  }
+void RLb() {  }
+void RLc() {  }
+void RLd() {  }
+void RLe() {  }
+void RLh() {  }
+void RLl() {  }
+void RLa() {  }
+void RLmHL() {  }
 // RRC s
-void RRCb(cpu_t* cpu) {  }
-void RRCc(cpu_t* cpu) {  }
-void RRCd(cpu_t* cpu) {  }
-void RRCe(cpu_t* cpu) {  }
-void RRCh(cpu_t* cpu) {  }
-void RRCl(cpu_t* cpu) {  }
-void RRCa(cpu_t* cpu) {  }
-void RRCmHL(cpu_t* cpu) {  }
+void RRCb() {  }
+void RRCc() {  }
+void RRCd() {  }
+void RRCe() {  }
+void RRCh() {  }
+void RRCl() {  }
+void RRCa() {  }
+void RRCmHL() {  }
 // RR s
-void RRb(cpu_t* cpu) {  }
-void RRc(cpu_t* cpu) {  }
-void RRd(cpu_t* cpu) {  }
-void RRe(cpu_t* cpu) {  }
-void RRh(cpu_t* cpu) {  }
-void RRl(cpu_t* cpu) {  }
-void RRa(cpu_t* cpu) {  }
-void RRmHL(cpu_t* cpu) {  }
+void RRb() {  }
+void RRc() {  }
+void RRd() {  }
+void RRe() {  }
+void RRh() {  }
+void RRl() {  }
+void RRa() {  }
+void RRmHL() {  }
 // SLA s
-void SLAb(cpu_t* cpu) {  }
-void SLAc(cpu_t* cpu) {  }
-void SLAd(cpu_t* cpu) {  }
-void SLAe(cpu_t* cpu) {  }
-void SLAh(cpu_t* cpu) {  }
-void SLAl(cpu_t* cpu) {  }
-void SLAa(cpu_t* cpu) {  }
-void SLAmHL(cpu_t* cpu) {  }
+void SLAb() {  }
+void SLAc() {  }
+void SLAd() {  }
+void SLAe() {  }
+void SLAh() {  }
+void SLAl() {  }
+void SLAa() {  }
+void SLAmHL() {  }
 // SRA s
-void SRAb(cpu_t* cpu) {  }
-void SRAc(cpu_t* cpu) {  }
-void SRAd(cpu_t* cpu) {  }
-void SRAe(cpu_t* cpu) {  }
-void SRAh(cpu_t* cpu) {  }
-void SRAl(cpu_t* cpu) {  }
-void SRAa(cpu_t* cpu) {  }
-void SRAmHL(cpu_t* cpu) {  }
+void SRAb() {  }
+void SRAc() {  }
+void SRAd() {  }
+void SRAe() {  }
+void SRAh() {  }
+void SRAl() {  }
+void SRAa() {  }
+void SRAmHL() {  }
 // SRL s
-void SRLb(cpu_t* cpu) {  }
-void SRLc(cpu_t* cpu) {  }
-void SRLd(cpu_t* cpu) {  }
-void SRLe(cpu_t* cpu) {  }
-void SRLh(cpu_t* cpu) {  }
-void SRLl(cpu_t* cpu) {  }
-void SRLa(cpu_t* cpu) {  }
-void SRLmHL(cpu_t* cpu) {  }
+void SRLb() {  }
+void SRLc() {  }
+void SRLd() {  }
+void SRLe() {  }
+void SRLh() {  }
+void SRLl() {  }
+void SRLa() {  }
+void SRLmHL() {  }
 
 /* Bit manipulation */
 // BIT b, s
-void BIT0b(cpu_t* cpu) {  }
-void BIT0c(cpu_t* cpu) {  }
-void BIT0d(cpu_t* cpu) {  }
-void BIT0e(cpu_t* cpu) {  }
-void BIT0h(cpu_t* cpu) {  }
-void BIT0l(cpu_t* cpu) {  }
-void BIT0a(cpu_t* cpu) {  }
-void BIT0mHL(cpu_t* cpu) {  }
-void BIT1b(cpu_t* cpu) {  }
-void BIT1c(cpu_t* cpu) {  }
-void BIT1d(cpu_t* cpu) {  }
-void BIT1e(cpu_t* cpu) {  }
-void BIT1h(cpu_t* cpu) {  }
-void BIT1l(cpu_t* cpu) {  }
-void BIT1a(cpu_t* cpu) {  }
-void BIT1mHL(cpu_t* cpu) {  }
-void BIT2b(cpu_t* cpu) {  }
-void BIT2c(cpu_t* cpu) {  }
-void BIT2d(cpu_t* cpu) {  }
-void BIT2e(cpu_t* cpu) {  }
-void BIT2h(cpu_t* cpu) {  }
-void BIT2l(cpu_t* cpu) {  }
-void BIT2a(cpu_t* cpu) {  }
-void BIT2mHL(cpu_t* cpu) {  }
-void BIT3b(cpu_t* cpu) {  }
-void BIT3c(cpu_t* cpu) {  }
-void BIT3d(cpu_t* cpu) {  }
-void BIT3e(cpu_t* cpu) {  }
-void BIT3h(cpu_t* cpu) {  }
-void BIT3l(cpu_t* cpu) {  }
-void BIT3a(cpu_t* cpu) {  }
-void BIT3mHL(cpu_t* cpu) {  }
-void BIT4b(cpu_t* cpu) {  }
-void BIT4c(cpu_t* cpu) {  }
-void BIT4d(cpu_t* cpu) {  }
-void BIT4e(cpu_t* cpu) {  }
-void BIT4h(cpu_t* cpu) {  }
-void BIT4l(cpu_t* cpu) {  }
-void BIT4a(cpu_t* cpu) {  }
-void BIT4mHL(cpu_t* cpu) {  }
-void BIT5b(cpu_t* cpu) {  }
-void BIT5c(cpu_t* cpu) {  }
-void BIT5d(cpu_t* cpu) {  }
-void BIT5e(cpu_t* cpu) {  }
-void BIT5h(cpu_t* cpu) {  }
-void BIT5l(cpu_t* cpu) {  }
-void BIT5a(cpu_t* cpu) {  }
-void BIT5mHL(cpu_t* cpu) {  }
-void BIT6b(cpu_t* cpu) {  }
-void BIT6c(cpu_t* cpu) {  }
-void BIT6d(cpu_t* cpu) {  }
-void BIT6e(cpu_t* cpu) {  }
-void BIT6h(cpu_t* cpu) {  }
-void BIT6l(cpu_t* cpu) {  }
-void BIT6a(cpu_t* cpu) {  }
-void BIT6mHL(cpu_t* cpu) {  }
-void BIT7b(cpu_t* cpu) {  }
-void BIT7c(cpu_t* cpu) {  }
-void BIT7d(cpu_t* cpu) {  }
-void BIT7e(cpu_t* cpu) {  }
-void BIT7h(cpu_t* cpu) {  }
-void BIT7l(cpu_t* cpu) {  }
-void BIT7a(cpu_t* cpu) {  }
-void BIT7mHL(cpu_t* cpu) {  }
+void BIT0b() {  }
+void BIT0c() {  }
+void BIT0d() {  }
+void BIT0e() {  }
+void BIT0h() {  }
+void BIT0l() {  }
+void BIT0a() {  }
+void BIT0mHL() {  }
+void BIT1b() {  }
+void BIT1c() {  }
+void BIT1d() {  }
+void BIT1e() {  }
+void BIT1h() {  }
+void BIT1l() {  }
+void BIT1a() {  }
+void BIT1mHL() {  }
+void BIT2b() {  }
+void BIT2c() {  }
+void BIT2d() {  }
+void BIT2e() {  }
+void BIT2h() {  }
+void BIT2l() {  }
+void BIT2a() {  }
+void BIT2mHL() {  }
+void BIT3b() {  }
+void BIT3c() {  }
+void BIT3d() {  }
+void BIT3e() {  }
+void BIT3h() {  }
+void BIT3l() {  }
+void BIT3a() {  }
+void BIT3mHL() {  }
+void BIT4b() {  }
+void BIT4c() {  }
+void BIT4d() {  }
+void BIT4e() {  }
+void BIT4h() {  }
+void BIT4l() {  }
+void BIT4a() {  }
+void BIT4mHL() {  }
+void BIT5b() {  }
+void BIT5c() {  }
+void BIT5d() {  }
+void BIT5e() {  }
+void BIT5h() {  }
+void BIT5l() {  }
+void BIT5a() {  }
+void BIT5mHL() {  }
+void BIT6b() {  }
+void BIT6c() {  }
+void BIT6d() {  }
+void BIT6e() {  }
+void BIT6h() {  }
+void BIT6l() {  }
+void BIT6a() {  }
+void BIT6mHL() {  }
+void BIT7b() {  }
+void BIT7c() {  }
+void BIT7d() {  }
+void BIT7e() {  }
+void BIT7h() {  }
+void BIT7l() {  }
+void BIT7a() {  }
+void BIT7mHL() {  }
 // SET b, s
-void SET0b(cpu_t* cpu) {  }
-void SET0c(cpu_t* cpu) {  }
-void SET0d(cpu_t* cpu) {  }
-void SET0e(cpu_t* cpu) {  }
-void SET0h(cpu_t* cpu) {  }
-void SET0l(cpu_t* cpu) {  }
-void SET0a(cpu_t* cpu) {  }
-void SET0mHL(cpu_t* cpu) {  }
-void SET1b(cpu_t* cpu) {  }
-void SET1c(cpu_t* cpu) {  }
-void SET1d(cpu_t* cpu) {  }
-void SET1e(cpu_t* cpu) {  }
-void SET1h(cpu_t* cpu) {  }
-void SET1l(cpu_t* cpu) {  }
-void SET1a(cpu_t* cpu) {  }
-void SET1mHL(cpu_t* cpu) {  }
-void SET2b(cpu_t* cpu) {  }
-void SET2c(cpu_t* cpu) {  }
-void SET2d(cpu_t* cpu) {  }
-void SET2e(cpu_t* cpu) {  }
-void SET2h(cpu_t* cpu) {  }
-void SET2l(cpu_t* cpu) {  }
-void SET2a(cpu_t* cpu) {  }
-void SET2mHL(cpu_t* cpu) {  }
-void SET3b(cpu_t* cpu) {  }
-void SET3c(cpu_t* cpu) {  }
-void SET3d(cpu_t* cpu) {  }
-void SET3e(cpu_t* cpu) {  }
-void SET3h(cpu_t* cpu) {  }
-void SET3l(cpu_t* cpu) {  }
-void SET3a(cpu_t* cpu) {  }
-void SET3mHL(cpu_t* cpu) {  }
-void SET4b(cpu_t* cpu) {  }
-void SET4c(cpu_t* cpu) {  }
-void SET4d(cpu_t* cpu) {  }
-void SET4e(cpu_t* cpu) {  }
-void SET4h(cpu_t* cpu) {  }
-void SET4l(cpu_t* cpu) {  }
-void SET4a(cpu_t* cpu) {  }
-void SET4mHL(cpu_t* cpu) {  }
-void SET5b(cpu_t* cpu) {  }
-void SET5c(cpu_t* cpu) {  }
-void SET5d(cpu_t* cpu) {  }
-void SET5e(cpu_t* cpu) {  }
-void SET5h(cpu_t* cpu) {  }
-void SET5l(cpu_t* cpu) {  }
-void SET5a(cpu_t* cpu) {  }
-void SET5mHL(cpu_t* cpu) {  }
-void SET6b(cpu_t* cpu) {  }
-void SET6c(cpu_t* cpu) {  }
-void SET6d(cpu_t* cpu) {  }
-void SET6e(cpu_t* cpu) {  }
-void SET6h(cpu_t* cpu) {  }
-void SET6l(cpu_t* cpu) {  }
-void SET6a(cpu_t* cpu) {  }
-void SET6mHL(cpu_t* cpu) {  }
-void SET7b(cpu_t* cpu) {  }
-void SET7c(cpu_t* cpu) {  }
-void SET7d(cpu_t* cpu) {  }
-void SET7e(cpu_t* cpu) {  }
-void SET7h(cpu_t* cpu) {  }
-void SET7l(cpu_t* cpu) {  }
-void SET7a(cpu_t* cpu) {  }
-void SET7mHL(cpu_t* cpu) {  }
+void SET0b() {  }
+void SET0c() {  }
+void SET0d() {  }
+void SET0e() {  }
+void SET0h() {  }
+void SET0l() {  }
+void SET0a() {  }
+void SET0mHL() {  }
+void SET1b() {  }
+void SET1c() {  }
+void SET1d() {  }
+void SET1e() {  }
+void SET1h() {  }
+void SET1l() {  }
+void SET1a() {  }
+void SET1mHL() {  }
+void SET2b() {  }
+void SET2c() {  }
+void SET2d() {  }
+void SET2e() {  }
+void SET2h() {  }
+void SET2l() {  }
+void SET2a() {  }
+void SET2mHL() {  }
+void SET3b() {  }
+void SET3c() {  }
+void SET3d() {  }
+void SET3e() {  }
+void SET3h() {  }
+void SET3l() {  }
+void SET3a() {  }
+void SET3mHL() {  }
+void SET4b() {  }
+void SET4c() {  }
+void SET4d() {  }
+void SET4e() {  }
+void SET4h() {  }
+void SET4l() {  }
+void SET4a() {  }
+void SET4mHL() {  }
+void SET5b() {  }
+void SET5c() {  }
+void SET5d() {  }
+void SET5e() {  }
+void SET5h() {  }
+void SET5l() {  }
+void SET5a() {  }
+void SET5mHL() {  }
+void SET6b() {  }
+void SET6c() {  }
+void SET6d() {  }
+void SET6e() {  }
+void SET6h() {  }
+void SET6l() {  }
+void SET6a() {  }
+void SET6mHL() {  }
+void SET7b() {  }
+void SET7c() {  }
+void SET7d() {  }
+void SET7e() {  }
+void SET7h() {  }
+void SET7l() {  }
+void SET7a() {  }
+void SET7mHL() {  }
 // RES b, s
-void RES0b(cpu_t* cpu) {  }
-void RES0c(cpu_t* cpu) {  }
-void RES0d(cpu_t* cpu) {  }
-void RES0e(cpu_t* cpu) {  }
-void RES0h(cpu_t* cpu) {  }
-void RES0l(cpu_t* cpu) {  }
-void RES0a(cpu_t* cpu) {  }
-void RES0mHL(cpu_t* cpu) {  }
-void RES1b(cpu_t* cpu) {  }
-void RES1c(cpu_t* cpu) {  }
-void RES1d(cpu_t* cpu) {  }
-void RES1e(cpu_t* cpu) {  }
-void RES1h(cpu_t* cpu) {  }
-void RES1l(cpu_t* cpu) {  }
-void RES1a(cpu_t* cpu) {  }
-void RES1mHL(cpu_t* cpu) {  }
-void RES2b(cpu_t* cpu) {  }
-void RES2c(cpu_t* cpu) {  }
-void RES2d(cpu_t* cpu) {  }
-void RES2e(cpu_t* cpu) {  }
-void RES2h(cpu_t* cpu) {  }
-void RES2l(cpu_t* cpu) {  }
-void RES2a(cpu_t* cpu) {  }
-void RES2mHL(cpu_t* cpu) {  }
-void RES3b(cpu_t* cpu) {  }
-void RES3c(cpu_t* cpu) {  }
-void RES3d(cpu_t* cpu) {  }
-void RES3e(cpu_t* cpu) {  }
-void RES3h(cpu_t* cpu) {  }
-void RES3l(cpu_t* cpu) {  }
-void RES3a(cpu_t* cpu) {  }
-void RES3mHL(cpu_t* cpu) {  }
-void RES4b(cpu_t* cpu) {  }
-void RES4c(cpu_t* cpu) {  }
-void RES4d(cpu_t* cpu) {  }
-void RES4e(cpu_t* cpu) {  }
-void RES4h(cpu_t* cpu) {  }
-void RES4l(cpu_t* cpu) {  }
-void RES4a(cpu_t* cpu) {  }
-void RES4mHL(cpu_t* cpu) {  }
-void RES5b(cpu_t* cpu) {  }
-void RES5c(cpu_t* cpu) {  }
-void RES5d(cpu_t* cpu) {  }
-void RES5e(cpu_t* cpu) {  }
-void RES5h(cpu_t* cpu) {  }
-void RES5l(cpu_t* cpu) {  }
-void RES5a(cpu_t* cpu) {  }
-void RES5mHL(cpu_t* cpu) {  }
-void RES6b(cpu_t* cpu) {  }
-void RES6c(cpu_t* cpu) {  }
-void RES6d(cpu_t* cpu) {  }
-void RES6e(cpu_t* cpu) {  }
-void RES6h(cpu_t* cpu) {  }
-void RES6l(cpu_t* cpu) {  }
-void RES6a(cpu_t* cpu) {  }
-void RES6mHL(cpu_t* cpu) {  }
-void RES7b(cpu_t* cpu) {  }
-void RES7c(cpu_t* cpu) {  }
-void RES7d(cpu_t* cpu) {  }
-void RES7e(cpu_t* cpu) {  }
-void RES7h(cpu_t* cpu) {  }
-void RES7l(cpu_t* cpu) {  }
-void RES7a(cpu_t* cpu) {  }
-void RES7mHL(cpu_t* cpu) {  }
+void RES0b() {  }
+void RES0c() {  }
+void RES0d() {  }
+void RES0e() {  }
+void RES0h() {  }
+void RES0l() {  }
+void RES0a() {  }
+void RES0mHL() {  }
+void RES1b() {  }
+void RES1c() {  }
+void RES1d() {  }
+void RES1e() {  }
+void RES1h() {  }
+void RES1l() {  }
+void RES1a() {  }
+void RES1mHL() {  }
+void RES2b() {  }
+void RES2c() {  }
+void RES2d() {  }
+void RES2e() {  }
+void RES2h() {  }
+void RES2l() {  }
+void RES2a() {  }
+void RES2mHL() {  }
+void RES3b() {  }
+void RES3c() {  }
+void RES3d() {  }
+void RES3e() {  }
+void RES3h() {  }
+void RES3l() {  }
+void RES3a() {  }
+void RES3mHL() {  }
+void RES4b() {  }
+void RES4c() {  }
+void RES4d() {  }
+void RES4e() {  }
+void RES4h() {  }
+void RES4l() {  }
+void RES4a() {  }
+void RES4mHL() {  }
+void RES5b() {  }
+void RES5c() {  }
+void RES5d() {  }
+void RES5e() {  }
+void RES5h() {  }
+void RES5l() {  }
+void RES5a() {  }
+void RES5mHL() {  }
+void RES6b() {  }
+void RES6c() {  }
+void RES6d() {  }
+void RES6e() {  }
+void RES6h() {  }
+void RES6l() {  }
+void RES6a() {  }
+void RES6mHL() {  }
+void RES7b() {  }
+void RES7c() {  }
+void RES7d() {  }
+void RES7e() {  }
+void RES7h() {  }
+void RES7l() {  }
+void RES7a() {  }
+void RES7mHL() {  }
 
 /* Jumps */
 // JP nn
-void JPnn(cpu_t* cpu) {  }
+void JPnn() {  }
 // JP cc, nn
-void JPZnn(cpu_t* cpu) {  }
-void JPCnn(cpu_t* cpu) {  }
-void JPNZnn(cpu_t* cpu) {  }
-void JPNCnn(cpu_t* cpu) {  }
+void JPZnn() {  }
+void JPCnn() {  }
+void JPNZnn() {  }
+void JPNCnn() {  }
 // JP (HL)
-void JPmHL(cpu_t* cpu) {  }
+void JPmHL() {  }
 // JR e
-void JRn(cpu_t* cpu) {  }
+void JRn() {  }
 // JR cc, e
-void JRZn(cpu_t* cpu) {  }
-void JRCn(cpu_t* cpu) {  }
-void JRNZn(cpu_t* cpu) {  }
-void JRNCn(cpu_t* cpu) {  }
+void JRZn() {  }
+void JRCn() {  }
+void JRNZn() {  }
+void JRNCn() {  }
 
 /* Calls */
 // CALL nn
-void CALLnn(cpu_t* cpu) {  }
+void CALLnn() {  }
 // CALL cc, nn
-void CALLZnn(cpu_t* cpu) {  }
-void CALLCnn(cpu_t* cpu) {  }
-void CALLNZnn(cpu_t* cpu) {  }
-void CALLNCnn(cpu_t* cpu) {  }
+void CALLZnn() {  }
+void CALLCnn() {  }
+void CALLNZnn() {  }
+void CALLNCnn() {  }
 
 /* Restarts */
 // RST f
-void RST0(cpu_t* cpu) {  }
-void RST8(cpu_t* cpu) {  }
-void RST10(cpu_t* cpu) {  }
-void RST18(cpu_t* cpu) {  }
-void RST20(cpu_t* cpu) {  }
-void RST28(cpu_t* cpu) {  }
-void RST30(cpu_t* cpu) {  }
-void RST38(cpu_t* cpu) {  }
+void RST0() {  }
+void RST8() {  }
+void RST10() {  }
+void RST18() {  }
+void RST20() {  }
+void RST28() {  }
+void RST30() {  }
+void RST38() {  }
 
 /* Returns */
 // RET
-void RET(cpu_t* cpu) {  }
+void RET() {  }
 // RET cc
-void RETZ(cpu_t* cpu) {  }
-void RETC(cpu_t* cpu) {  }
-void RETNZ(cpu_t* cpu) {  }
-void RETNC(cpu_t* cpu) {  }
+void RETZ() {  }
+void RETC() {  }
+void RETNZ() {  }
+void RETNC() {  }
 // RETI
-void RETI(cpu_t* cpu) {  }
+void RETI() {  }
 
