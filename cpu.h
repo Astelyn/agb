@@ -78,6 +78,13 @@ typedef struct {
     uint8_t op;              // Current opcode
 } cpu_t;
 
+/* Helper functions */
+void push(uint16_t val);
+uint16_t pop(void);
+uint8_t add_8_8(uint8_t a, uint8_t b);
+uint16_t add_16_16(uint16_t a, uint16_t b);
+uint16_t add_16_8(uint16_t a, uint8_t b);
+
 /* 8-bit loads */
 // LD r <- s
 void LDbb(cpu_t* cpu);

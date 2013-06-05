@@ -29,6 +29,54 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Global CPU structure */
 cpu_t cpu;
 
+/* Helper functions */
+void push(uint16_t val)
+{
+    REG_SP -= 2;
+    write_16(REG_SP, val);
+}
+
+uint16_t pop(void)
+{
+    REG_SP += 2;
+    return read_16(REG_SP - 2);
+}
+
+uint8_t add_8_8(uint8_t a, uint8_t b)
+{
+    uint8_t ret = a + b;
+
+    FLAG_C = (0xFF - a < b);
+    FLAG_H = (0x0F - (a & 0x0F) < (b & 0x0F));
+    FLAG_Z = (ret == 0);
+    FLAG_N = 0;
+
+    return ret;
+}
+
+uint16_t add_16_16(uint16_t a, uint16_t b)
+{
+    uint16_t ret = a + b;
+
+    FLAG_C = (0xFFFF - a < b);
+    FLAG_H = (0x0FFF - (a & 0x0FFF) < (b & 0x0FFF));
+    FLAG_N = 0;
+
+    return ret;
+}
+
+uint16_t add_16_8(uint16_t a, uint8_t b)
+{
+    uint16_t ret = a + (uint16_t)b;
+
+    FLAG_C = (0xFF - (a & 0x00ff) < b);
+    FLAG_H = (0x0F - (a & 0x0F) < (b & 0x0F));
+    FLAG_Z = 0;
+    FLAG_N = 0;
+
+    return ret;
+}
+
 /* 8-bit loads */
 // LD r <- s
 void LDbb() { REG_B = REG_B; }
@@ -131,38 +179,38 @@ void LDHamn() { REG_A = read_8(0xFF00 + read_8(REG_PC++)); }
 
 /* 16-bit loads */
 // LD dd, nn
-void LDBCnn() {  }
-void LDDEnn() {  }
-void LDHLnn() {  }
-void LDSPnn() {  }
+void LDBCnn() { REG_BC = read_16(REG_PC); REG_PC += 2; }
+void LDDEnn() { REG_DE = read_16(REG_PC); REG_PC += 2; }
+void LDHLnn() { REG_HL = read_16(REG_PC); REG_PC += 2; }
+void LDSPnn() { REG_SP = read_16(REG_PC); REG_PC += 2; }
 // LD (nn), SP
-void LDmnnSP() {  }
+void LDmnnSP() { write_16(read_16(REG_PC), REG_SP); REG_PC += 2; }
 // LD SP, HL
-void LDSPHL() {  }
+void LDSPHL() { REG_SP = REG_HL; }
 // LD HL, (SP + e)
 void LSHLSPn() {  }
 // PUSH ss
-void PUSHBC() {  }
-void PUSHDE() {  }
-void PUSHHL() {  }
-void PUSHAF() {  }
+void PUSHBC() { push(REG_BC); }
+void PUSHDE() { push(REG_DE); }
+void PUSHHL() { push(REG_HL); }
+void PUSHAF() { push(REG_AF); }
 // POP dd
-void POPBC() {  }
-void POPDE() {  }
-void POPHL() {  }
-void POPAF() {  }
+void POPBC() { REG_BC = pop(); }
+void POPDE() { REG_DE = pop(); }
+void POPHL() { REG_HL = pop(); }
+void POPAF() { REG_AF = pop(); }
 
 /* 8-bit ALU */
 // ADD A, s
-void ADDab() {  }
-void ADDac() {  }
-void ADDad() {  }
-void ADDae() {  }
-void ADDah() {  }
-void ADDal() {  }
-void ADDaa() {  }
-void ADDan() {  }
-void ADDamHL() {  }
+void ADDab() { REG_A = add_8_8(REG_A, REG_B); }
+void ADDac() { REG_A = add_8_8(REG_A, REG_C); }
+void ADDad() { REG_A = add_8_8(REG_A, REG_D); }
+void ADDae() { REG_A = add_8_8(REG_A, REG_E); }
+void ADDah() { REG_A = add_8_8(REG_A, REG_H); }
+void ADDal() { REG_A = add_8_8(REG_A, REG_L); }
+void ADDaa() { REG_A = add_8_8(REG_A, REG_A); }
+void ADDan() { REG_A = add_8_8(REG_A, read8(REG_PC++); }
+void ADDamHL() { REG_A = add_8_8(REG_A, read8(REG_HL)); }
 // ADC A, s
 void ADCab() {  }
 void ADCac() {  }
