@@ -29,6 +29,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Global CPU structure */
 cpu_t cpu;
 
+/* Save states */
+int curr_save_slot;
+cpu_t save_states[10];
+
 /* Helper functions */
 static void push(uint16_t val)
 {
@@ -242,15 +246,15 @@ static void ADDaa() { REG_A = add_8_8(REG_A, REG_A); }
 static void ADDan() { REG_A = add_8_8(REG_A, read8(REG_PC++)); }
 static void ADDamHL() { REG_A = add_8_8(REG_A, read8(REG_HL)); }
 /* ADC A, s */
-static void ADCab() {  }
-static void ADCac() {  }
-static void ADCad() {  }
-static void ADCae() {  }
-static void ADCah() {  }
-static void ADCal() {  }
-static void ADCaa() {  }
-static void ADCan() {  }
-static void ADCamHL() {  }
+static void ADCab() { REG_A = adc(REG_A, REG_B); }
+static void ADCac() { REG_A = adc(REG_A, REG_C); }
+static void ADCad() { REG_A = adc(REG_A, REG_D); }
+static void ADCae() { REG_A = adc(REG_A, REG_E); }
+static void ADCah() { REG_A = adc(REG_A, REG_H); }
+static void ADCal() { REG_A = adc(REG_A, REG_L); }
+static void ADCaa() { REG_A = adc(REG_A, REG_A); }
+static void ADCan() { REG_A = adc(REG_A, read_8(REG_PC++)); }
+static void ADCamHL() { REG_A = adc(REG_A, read_8(REG_HL)); }
 /* SUB s */
 static void SUBab() {  }
 static void SUBac() {  }
@@ -783,6 +787,8 @@ int cpu_run(int cycles)
     uint32_t total = 0;
 
     while (total < cycles) {
+        /* TODO: Interrupts */
+
         cpu.op = read_8(cpu.mmu, REG_PC++);
 
         (*ops[cpu.op])();
@@ -796,5 +802,17 @@ int cpu_run(int cycles)
     }
 
     return 0;
+}
+
+/* Save states */
+void save_state(void)
+{
+    /* Save CPU state */
+    /* Write to disk */
+}
+
+void load_state(void)
+{
+    cpu = save_states[curr_save_slot];
 }
 

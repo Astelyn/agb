@@ -90,5 +90,9 @@ typedef struct {
 void cpu_reset(void);
 int cpu_run(int cycles);
 
+/* Save states */
+void save_state(void);
+void load_state(void);
+
 #endif
 
