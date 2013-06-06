@@ -88,7 +88,7 @@ typedef struct {
 
 /* Executive functions */
 void cpu_reset(void);
-int cpu_run(int cycles);
+int cpu_run(uint32_t cycles);
 
 /* Save states */
 void save_state(void);

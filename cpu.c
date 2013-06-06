@@ -30,7 +30,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 cpu_t cpu;
 
 /* Save states */
-int curr_save_slot;
+uint8_t curr_save_slot;
 cpu_t save_states[10];
 
 /* Helper functions */
@@ -84,8 +84,8 @@ static uint16_t add_16_8(uint16_t a, uint8_t b)
 static uint8_t adc(uint8_t a, uint8_t b)
 {
     uint8_t tmp, ret;
-    int c = 0;
-    int h = 0;
+    uint8_t h = 0;
+    uint8_t c = 0;
 
     tmp = a + FLAG_C;
 
@@ -107,6 +107,113 @@ static uint8_t adc(uint8_t a, uint8_t b)
     FLAG_C = c;
     FLAG_Z = (ret == 0);
     FLAG_N = 0;
+
+    return ret;
+}
+
+static uint8_t sub(uint8_t a, uint8_t b)
+{
+    uint8_t ret;
+
+    FLAG_C = (a < b);
+    FLAG_H = ((a & 0x0F) < (b & 0x0F));
+
+    ret = a - b;
+
+    FLAG_Z = (ret == 0);
+    FLAG_N = 1;
+
+    return ret;
+}
+
+static uint8_t sbc(uint8_t a, uint8_t b)
+{
+    uint8_t tmp, ret;
+    uint8_t h = 0;
+    uint8_t c = 0;
+
+    tmp = a - FLAG_C;
+
+    if (a < FLAG_C || tmp < b)
+        c = 1;
+
+    if ((a & 0x0F) < (FLAG_C & 0x0F) || (tmp & 0x0F) < (b & 0x0F))
+        h = 1;
+
+    ret = tmp - b;
+
+    FLAG_H = h;
+    FLAG_C = c;
+    FLAG_Z = (ret == 0);
+    FLAG_N = 1;
+
+    return ret;
+}
+
+static uint8_t inc_8(uint8_t a)
+{
+    a++;
+
+    FLAG_H = ((a & 0x0F) == 0);
+    FLAG_Z = (a == 0);
+    FLAG_N = 0;
+
+    return a;
+}
+
+static uint16_t inc_16(uint16_t a)
+{
+    return a + 1;
+}
+
+static uint8_t dec_8(uint8_t a)
+{
+    a--;
+
+    FLAG_H = ((a & 0x0F) == 0x0F);
+    FLAG_Z = (a == 0);
+    FLAG_N = 1;
+
+    return a;
+}
+
+static uint16_t dec_16(uint16_t a)
+{
+    return a - 1;
+}
+
+static uint8_t and(uint8_t a, uint8_t b)
+{
+    uint8_t ret = a & b;
+
+    FLAG_N = 0;
+    FLAG_H = 1;
+    FLAG_C = 0;
+    FLAG_Z = (ret == 0);
+
+    return ret;
+}
+
+static uint8_t or(uint8_t a, uint8_t b)
+{
+    uint8_t ret = a | b;
+
+    FLAG_N = 0;
+    FLAG_H = 0;
+    FLAG_C = 0;
+    FLAG_Z = (ret == 0);
+
+    return ret;
+}
+
+static uint8_t xor(uint8_t a, uint8_t b)
+{
+    uint8_t ret = a ^ b;
+
+    FLAG_N = 0;
+    FLAG_H = 0;
+    FLAG_C = 0;
+    FLAG_Z = (ret == 0);
 
     return ret;
 }
@@ -243,8 +350,8 @@ static void ADDae() { REG_A = add_8_8(REG_A, REG_E); }
 static void ADDah() { REG_A = add_8_8(REG_A, REG_H); }
 static void ADDal() { REG_A = add_8_8(REG_A, REG_L); }
 static void ADDaa() { REG_A = add_8_8(REG_A, REG_A); }
-static void ADDan() { REG_A = add_8_8(REG_A, read8(REG_PC++)); }
-static void ADDamHL() { REG_A = add_8_8(REG_A, read8(REG_HL)); }
+static void ADDan() { REG_A = add_8_8(REG_A, read8(cpu.mmu, REG_PC++)); }
+static void ADDamHL() { REG_A = add_8_8(REG_A, read8(cpu.mmu, REG_HL)); }
 /* ADC A, s */
 static void ADCab() { REG_A = adc(REG_A, REG_B); }
 static void ADCac() { REG_A = adc(REG_A, REG_C); }
@@ -253,58 +360,58 @@ static void ADCae() { REG_A = adc(REG_A, REG_E); }
 static void ADCah() { REG_A = adc(REG_A, REG_H); }
 static void ADCal() { REG_A = adc(REG_A, REG_L); }
 static void ADCaa() { REG_A = adc(REG_A, REG_A); }
-static void ADCan() { REG_A = adc(REG_A, read_8(REG_PC++)); }
-static void ADCamHL() { REG_A = adc(REG_A, read_8(REG_HL)); }
+static void ADCan() { REG_A = adc(REG_A, read_8(cpu.mmu, REG_PC++)); }
+static void ADCamHL() { REG_A = adc(REG_A, read_8(cpu.mmu, REG_HL)); }
 /* SUB s */
-static void SUBab() {  }
-static void SUBac() {  }
-static void SUBad() {  }
-static void SUBae() {  }
-static void SUBah() {  }
-static void SUBal() {  }
-static void SUBaa() {  }
-static void SUBan() {  }
-static void SUBamHL() {  }
+static void SUBab() { REG_A = sub(REG_A, REG_B); }
+static void SUBac() { REG_A = sub(REG_A, REG_C); }
+static void SUBad() { REG_A = sub(REG_A, REG_D); }
+static void SUBae() { REG_A = sub(REG_A, REG_E); }
+static void SUBah() { REG_A = sub(REG_A, REG_H); }
+static void SUBal() { REG_A = sub(REG_A, REG_L); }
+static void SUBaa() { REG_A = sub(REG_A, REG_A); }
+static void SUBan() { REG_A = sub(REG_A, read_8(cpu.mmu, REG_PC++)); }
+static void SUBamHL() { REG_A = sub(REG_A, read_8(cpu.mmu, REG_HL)); }
 /* SBC A, s */
-static void SBCab() {  }
-static void SBCac() {  }
-static void SBCad() {  }
-static void SBCae() {  }
-static void SBCah() {  }
-static void SBCal() {  }
-static void SBCaa() {  }
-static void SBCan() {  }
-static void SBCamHL() {  }
+static void SBCab() { REG_A = sbc(REG_A, REG_B); }
+static void SBCac() { REG_A = sbc(REG_A, REG_C); }
+static void SBCad() { REG_A = sbc(REG_A, REG_D); }
+static void SBCae() { REG_A = sbc(REG_A, REG_E); }
+static void SBCah() { REG_A = sbc(REG_A, REG_H); }
+static void SBCal() { REG_A = sbc(REG_A, REG_L); }
+static void SBCaa() { REG_A = sbc(REG_A, REG_A); }
+static void SBCan() { REG_A = sbc(REG_A, read_8(cpu.mmu, REG_PC++)); }
+static void SBCamHL() { REG_A = sbc(REG_A, read_8(cpu.mmu, REG_HL)); }
 /* AND s */
-static void ANDb() {  }
-static void ANDc() {  }
-static void ANDd() {  }
-static void ANDe() {  }
-static void ANDh() {  }
-static void ANDl() {  }
-static void ANDa() {  }
-static void ANDn() {  }
-static void ANDmHL() {  }
+static void ANDb() { REG_A = and(REG_A, REG_B); }
+static void ANDc() { REG_A = and(REG_A, REG_C); }
+static void ANDd() { REG_A = and(REG_A, REG_D); }
+static void ANDe() { REG_A = and(REG_A, REG_E); }
+static void ANDh() { REG_A = and(REG_A, REG_H); }
+static void ANDl() { REG_A = and(REG_A, REG_L); }
+static void ANDa() { REG_A = and(REG_A, REG_A); }
+static void ANDn() { REG_A = and(REG_A, read_8(cpu.mmu, REG_PC++)); }
+static void ANDmHL() { REG_A = and(REG_A, read_8(cpu.mmu, REG_HL)); }
 /* OR s */
-static void ORb() {  }
-static void ORc() {  }
-static void ORd() {  }
-static void ORe() {  }
-static void ORh() {  }
-static void ORl() {  }
-static void ORa() {  }
-static void ORn() {  }
-static void ORmHL() {  }
+static void ORb() { REG_A = or(REG_A, REG_B); }
+static void ORc() { REG_A = or(REG_A, REG_C); }
+static void ORd() { REG_A = or(REG_A, REG_D); }
+static void ORe() { REG_A = or(REG_A, REG_E); }
+static void ORh() { REG_A = or(REG_A, REG_H); }
+static void ORl() { REG_A = or(REG_A, REG_L); }
+static void ORa() { REG_A = or(REG_A, REG_A); }
+static void ORn() { REG_A = or(REG_A, read_8(cpu.mmu, REG_PC++)); }
+static void ORmHL() { REG_A = or(REG_A, read_8(cpu.mmu, REG_HL)); }
 /* XOR s */
-static void XORb() {  }
-static void XORc() {  }
-static void XORd() {  }
-static void XORe() {  }
-static void XORh() {  }
-static void XORl() {  }
-static void XORa() {  }
-static void XORn() {  }
-static void XORmHL() {  }
+static void XORb() { REG_A = xor(REG_A, REG_B); }
+static void XORc() { REG_A = xor(REG_A, REG_C); }
+static void XORd() { REG_A = xor(REG_A, REG_D); }
+static void XORe() { REG_A = xor(REG_A, REG_E); }
+static void XORh() { REG_A = xor(REG_A, REG_H); }
+static void XORl() { REG_A = xor(REG_A, REG_L); }
+static void XORa() { REG_A = xor(REG_A, REG_A); }
+static void XORn() { REG_A = xor(REG_A, read_8(cpu.mmu, REG_PC++)); }
+static void XORmHL() { REG_A = xor(REG_A, read_8(cpu.mmu, REG_HL)); }
 /* CP s */
 static void CPb() {  }
 static void CPc() {  }
@@ -782,7 +889,7 @@ void cpu_reset(void)
     cpu.ins_clock.t = 0;
 }
 
-int cpu_run(int cycles)
+int cpu_run(uint32_t cycles)
 {
     uint32_t total = 0;
 
