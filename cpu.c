@@ -451,7 +451,7 @@ void LDmnna(void) { write_8(cpu.mmu, read_16(cpu.mmu, REG_PC), REG_A); REG_PC +=
 /* LD A <- (C) */
 void LDamc(void) { REG_A = read_8(cpu.mmu, REG_C); }
 /* LD (C) <- A */
-void LDmca(void) { write_8(cpu.mmu, read8(REG_C), REG_A); }
+void LDmca(void) { write_8(cpu.mmu, read_8(cpu.mmu, REG_C), REG_A); }
 /* LDD A <- (HL) */
 void LDDamHL(void) { REG_A = read_8(cpu.mmu, REG_HL--); }
 /* LDD (HL) <- A */
@@ -497,8 +497,8 @@ void ADDae(void) { REG_A = add_8_8(REG_A, REG_E); }
 void ADDah(void) { REG_A = add_8_8(REG_A, REG_H); }
 void ADDal(void) { REG_A = add_8_8(REG_A, REG_L); }
 void ADDaa(void) { REG_A = add_8_8(REG_A, REG_A); }
-void ADDan(void) { REG_A = add_8_8(REG_A, read8(cpu.mmu, REG_PC++)); }
-void ADDamHL(void) { REG_A = add_8_8(REG_A, read8(cpu.mmu, REG_HL)); }
+void ADDan(void) { REG_A = add_8_8(REG_A, read_8(cpu.mmu, REG_PC++)); }
+void ADDamHL(void) { REG_A = add_8_8(REG_A, read_8(cpu.mmu, REG_HL)); }
 /* ADC A, s */
 void ADCab(void) { REG_A = adc(REG_A, REG_B); }
 void ADCac(void) { REG_A = adc(REG_A, REG_C); }
@@ -1168,7 +1168,23 @@ void (*ops[256])() = {
 
 /* M clock values */
 uint8_t timings_m[/*256*/] = {
-    0 /* Stuff */
+/*   |  0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | A | B| C | D | E| F | */
+/* 0 */  4, 12,  8,  8,  4,  4,  8,  4, 20,  8,  8, 8,  4,  4, 8,  4,
+/* 1 */  4, 12,  8,  8,  4,  4,  8,  4, 12,  8,  8, 8,  4,  4, 8,  4,
+/* 2 */  8, 12,  8,  8,  4,  4,  8,  4,  8,  8,  8, 8,  4,  4, 8,  4,
+/* 3 */  8, 12,  8,  8, 12, 12, 12,  4,  8,  8,  8, 8,  4,  4, 8,  4,
+/* 4 */  4,  4,  4,  4,  4,  4,  8,  4,  4,  4,  4, 4,  4,  4, 8,  4,
+/* 5 */  4,  4,  4,  4,  4,  4,  8,  4,  4,  4,  4, 4,  4,  4, 8,  4,
+/* 6 */  4,  4,  4,  4,  4,  4,  8,  4,  4,  4,  4, 4,  4,  4, 8,  4,
+/* 7 */  8,  8,  8,  8,  8,  8,  4,  8,  4,  4,  4, 4,  4,  4, 8,  4,
+/* 8 */  4,  4,  4,  4,  4,  4,  8,  4,  4,  4,  4, 4,  4,  4, 8,  4,
+/* 9 */  4,  4,  4,  4,  4,  4,  8,  4,  4,  4,  4, 4,  4,  4, 8,  4,
+/* A */  4,  4,  4,  4,  4,  4,  8,  4,  4,  4,  4, 4,  4,  4, 8,  4,
+/* B */  4,  4,  4,  4,  4,  4,  8,  4,  4,  4,  4, 4,  4,  4, 8,  4,
+/* C */  8, 12, 12, 16, 12, 16,  8, 16,  8, 16, 12, 4, 12, 24, 8, 16,
+/* D */  8, 12, 12,  4, 12, 16,  8, 16,  8, 16, 12, 4, 12,  4, 8, 16,
+/* E */ 12, 12,  8,  4,  4, 16,  8, 16, 16,  4, 16, 4,  4,  4, 8, 16,
+/* F */ 12, 12,  8,  4,  4, 16,  8, 16, 12,  8, 16, 4,  4,  4, 8, 16
 };
 
 /* T clock values */
@@ -1238,5 +1254,40 @@ void save_state(void)
 void load_state(void)
 {
     cpu = save_states[curr_save_slot];
+}
+
+/* Debug */
+void print_cpu(void)
+{
+    printf("AF: %d\n", REG_AF);
+    printf("BC: %d\n", REG_BC);
+    printf("DE: %d\n", REG_DE);
+    printf("HL: %d\n", REG_HL);
+    printf("A: %hd\n", REG_A);
+    printf("B: %hd\n", REG_B);
+    printf("C: %hd\n", REG_C);
+    printf("D: %hd\n", REG_D);
+    printf("E: %hd\n", REG_E);
+    printf("H: %hd\n", REG_H);
+    printf("L: %hd\n", REG_L);
+    printf("PC: %d\n", REG_PC);
+    printf("SP: %d\n", REG_SP);
+    printf("FLAGZ: %hd\n", FLAG_Z);
+    printf("FLAGN: %hd\n", FLAG_N);
+    printf("FLAGH: %hd\n", FLAG_H);
+    printf("FLAGC: %hd\n", FLAG_C);
+    printf("IME: %hd\n", cpu.ime);
+    printf("HALT: %hd\n", cpu.halt);
+    printf("STOP: %hd\n", cpu.stop);
+    printf("SCLOCKM: %hd\n", cpu.sys_clock.m);
+    printf("SCLOCKT: %hd\n", cpu.sys_clock.t);
+    printf("ICLOCKM: %hd\n", cpu.ins_clock.m);
+    printf("ICLOCKT: %hd\n", cpu.ins_clock.t);
+}
+
+int main(void)
+{
+    print_cpu();
+    return 0;
 }
 

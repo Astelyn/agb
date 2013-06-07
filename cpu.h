@@ -27,6 +27,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef _CPU_H
 #define _CPU_H
 
+#ifdef _DEBUG
+#include <stdio.h>
+#endif
+
 #include <stdint.h>
 #include "mmu.h"
 
