@@ -88,6 +88,7 @@ typedef struct {
     uint16_t pc, sp;         /* 16-bit registers */
     uint8_t z, n, h, c;      /* Status flags */
     uint8_t op;              /* Current opcode */
+    uint8_t cb_op;           /* Current opcode (0xCB prefix) */
     uint8_t ime;             /* Interrupts enabled */
     uint8_t halt;            /* HALT status */
     uint8_t stop;            /* STOP status */

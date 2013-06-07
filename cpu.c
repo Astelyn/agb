@@ -1142,7 +1142,11 @@ void (*cb_ops[256])() = {
 };
 
 /* Jump to 2-byte opcodes */
-void CB(void) { (*cb_ops[read_8(cpu.mmu, REG_PC++)])(); }
+void CB(void)
+{
+    cpu.cb_op = read_8(cpu.mmu, REG_PC++);
+    (*cb_ops[cpu.cb_op])();
+}
 
 /* Table of function pointers indexed by opcode */
 void (*ops[256])() = {
@@ -1167,7 +1171,7 @@ void (*ops[256])() = {
 
 
 /* M clock values */
-uint8_t timings_m[/*256*/] = {
+uint8_t timings_m[256] = {
 /*   |  0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | A | B| C | D | E| F | */
 /* 0 */  4, 12,  8,  8,  4,  4,  8,  4, 20,  8,  8, 8,  4,  4, 8,  4,
 /* 1 */  4, 12,  8,  8,  4,  4,  8,  4, 12,  8,  8, 8,  4,  4, 8,  4,
@@ -1186,6 +1190,28 @@ uint8_t timings_m[/*256*/] = {
 /* E */ 12, 12,  8,  4,  4, 16,  8, 16, 16,  4, 16, 4,  4,  4, 8, 16,
 /* F */ 12, 12,  8,  4,  4, 16,  8, 16, 12,  8, 16, 4,  4,  4, 8, 16
 };
+
+/* M clock values (0xCB prefix) */
+uint8_t cb_timings_m[256] = {
+/*   | 0 | 1| 2| 3| 4| 5| 6 | 7| 8| 9| A| B| C| D| E | F| */
+/* 0 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 1 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 2 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 3 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 4 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 5 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 6 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 7 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 8 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* 9 */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* A */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* B */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* C */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* D */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* E */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8,
+/* F */ 8, 8, 8, 8, 8, 8, 16, 8, 8, 8, 8, 8, 8, 8, 16, 8
+};
+
 
 /* T clock values */
 uint8_t timings_t[/*256*/] = {
@@ -1230,8 +1256,12 @@ int cpu_run(uint32_t cycles)
 
         (*ops[cpu.op])();
 
-        cpu.ins_clock.m += timings_m[cpu.op];
-        cpu.ins_clock.t = timings_t[cpu.op];
+        if (cpu.op != 0xCB) {
+            cpu.ins_clock.m += timings_m[cpu.op];
+            cpu.ins_clock.t = timings_t[cpu.op];
+        } else {
+            cpu.ins_clock.m += cb_timings_m[cpu.cb_op];
+        }
         /* TODO: ^ replace with:
             cpu.ins_clock.t = CEIL(cpu.ins_clock.m / 4.0)
         */
@@ -1259,26 +1289,28 @@ void load_state(void)
 /* Debug */
 void print_cpu(void)
 {
-    printf("AF: %d\n", REG_AF);
-    printf("BC: %d\n", REG_BC);
-    printf("DE: %d\n", REG_DE);
-    printf("HL: %d\n", REG_HL);
-    printf("A: %hd\n", REG_A);
-    printf("B: %hd\n", REG_B);
-    printf("C: %hd\n", REG_C);
-    printf("D: %hd\n", REG_D);
-    printf("E: %hd\n", REG_E);
-    printf("H: %hd\n", REG_H);
-    printf("L: %hd\n", REG_L);
-    printf("PC: %d\n", REG_PC);
-    printf("SP: %d\n", REG_SP);
-    printf("FLAGZ: %hd\n", FLAG_Z);
-    printf("FLAGN: %hd\n", FLAG_N);
-    printf("FLAGH: %hd\n", FLAG_H);
-    printf("FLAGC: %hd\n", FLAG_C);
-    printf("IME: %hd\n", cpu.ime);
-    printf("HALT: %hd\n", cpu.halt);
-    printf("STOP: %hd\n", cpu.stop);
+    printf("AF     : %d\n", REG_AF);
+    printf("BC     : %d\n", REG_BC);
+    printf("DE     : %d\n", REG_DE);
+    printf("HL     : %d\n", REG_HL);
+    printf("A      : %hd\n", REG_A);
+    printf("B      : %hd\n", REG_B);
+    printf("C      : %hd\n", REG_C);
+    printf("D      : %hd\n", REG_D);
+    printf("E      : %hd\n", REG_E);
+    printf("H      : %hd\n", REG_H);
+    printf("L      : %hd\n", REG_L);
+    printf("PC     : %d\n", REG_PC);
+    printf("SP     : %d\n", REG_SP);
+    printf("OP     : %hd\n", cpu.op);
+    printf("CBOP   : %hd\n", cpu.cb_op);
+    printf("FLAGZ  : %hd\n", FLAG_Z);
+    printf("FLAGN  : %hd\n", FLAG_N);
+    printf("FLAGH  : %hd\n", FLAG_H);
+    printf("FLAGC  : %hd\n", FLAG_C);
+    printf("IME    : %hd\n", cpu.ime);
+    printf("HALT   : %hd\n", cpu.halt);
+    printf("STOP   : %hd\n", cpu.stop);
     printf("SCLOCKM: %hd\n", cpu.sys_clock.m);
     printf("SCLOCKT: %hd\n", cpu.sys_clock.t);
     printf("ICLOCKM: %hd\n", cpu.ins_clock.m);
