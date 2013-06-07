@@ -24,42 +24,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-#ifndef _MMU_H
-#define _MMU_H
-
-#include <stdint.h>
-#include "rom.h"
+#ifndef _ROM_H
+#define _ROM_H
 
 typedef struct {
-    uint8_t bios[256];
-    uint8_t in_bios;
-    uint8_t* eram;
-    uint8_t* wram;
-    uint8_t* zram;
-    rom_t* rom;
+    char* name;
+    uint8_t* prg;
+} rom_t;
 
-#ifdef _DEBUG
-    uint8_t* ram;
-#endif
-} mmu_t;
-
-/* Initialize MMU, load a ROM */
-mmu_t* mmu_init(char* name);
-
-/* Clear all MMU data */
-void mmu_reset(mmu_t* mmu);
-
-/* Read 1 byte of memory from a given address */
-uint8_t read_8(mmu_t* mmu, uint16_t addr);
-
-/* Read 2 bytes of memory from a given address */
-uint16_t read_16(mmu_t* mmu, uint16_t addr);
-
-/* Write 1 byte of memory to a given address */
-void write_8(mmu_t* mmu, uint16_t addr, uint8_t val);
-
-/* Write 2 bytes of memory to a given address */
-void write_16(mmu_t* mmu, uint16_t addr, uint16_t val);
+/* Load a .gb ROM file from disk */
+rom_t* rom_load(char* name);
 
 #endif
 

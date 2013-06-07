@@ -1277,6 +1277,7 @@ int cpu_run(uint32_t cycles)
 /* Save states */
 void save_state(void)
 {
+    /* TODO */
     /* Save CPU state */
     /* Write to disk */
 }
@@ -1334,7 +1335,6 @@ int main(void)
     print_cpu();
 
 #endif
-
     return 0;
 }
 
