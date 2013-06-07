@@ -1289,37 +1289,52 @@ void load_state(void)
 /* Debug */
 void print_cpu(void)
 {
-    printf("AF     : %d\n", REG_AF);
-    printf("BC     : %d\n", REG_BC);
-    printf("DE     : %d\n", REG_DE);
-    printf("HL     : %d\n", REG_HL);
-    printf("A      : %hd\n", REG_A);
-    printf("B      : %hd\n", REG_B);
-    printf("C      : %hd\n", REG_C);
-    printf("D      : %hd\n", REG_D);
-    printf("E      : %hd\n", REG_E);
-    printf("H      : %hd\n", REG_H);
-    printf("L      : %hd\n", REG_L);
-    printf("PC     : %d\n", REG_PC);
-    printf("SP     : %d\n", REG_SP);
-    printf("OP     : %hd\n", cpu.op);
-    printf("CBOP   : %hd\n", cpu.cb_op);
-    printf("FLAGZ  : %hd\n", FLAG_Z);
-    printf("FLAGN  : %hd\n", FLAG_N);
-    printf("FLAGH  : %hd\n", FLAG_H);
-    printf("FLAGC  : %hd\n", FLAG_C);
-    printf("IME    : %hd\n", cpu.ime);
-    printf("HALT   : %hd\n", cpu.halt);
-    printf("STOP   : %hd\n", cpu.stop);
-    printf("SCLOCKM: %hd\n", cpu.sys_clock.m);
-    printf("SCLOCKT: %hd\n", cpu.sys_clock.t);
-    printf("ICLOCKM: %hd\n", cpu.ins_clock.m);
-    printf("ICLOCKT: %hd\n", cpu.ins_clock.t);
+    printf("AF     :  $%x\n", REG_AF);
+    printf("BC     :  $%x\n", REG_BC);
+    printf("DE     :  $%x\n", REG_DE);
+    printf("HL     :  $%x\n", REG_HL);
+    printf("A      :  $%hx\n", REG_A);
+    printf("B      :  $%hx\n", REG_B);
+    printf("C      :  $%hx\n", REG_C);
+    printf("D      :  $%hx\n", REG_D);
+    printf("E      :  $%hx\n", REG_E);
+    printf("H      :  $%hx\n", REG_H);
+    printf("L      :  $%hx\n", REG_L);
+    printf("PC     :  $%x\n", REG_PC);
+    printf("SP     :  $%x\n", REG_SP);
+    printf("OP     :  $%hx\n", cpu.op);
+    printf("CBOP   :  $%hx\n", cpu.cb_op);
+    printf("FLAGZ  :  $%hx\n", FLAG_Z);
+    printf("FLAGN  :  $%hx\n", FLAG_N);
+    printf("FLAGH  :  $%hx\n", FLAG_H);
+    printf("FLAGC  :  $%hx\n", FLAG_C);
+    printf("IME    :  $%hx\n", cpu.ime);
+    printf("HALT   :  $%hx\n", cpu.halt);
+    printf("STOP   :  $%hx\n", cpu.stop);
+    printf("SCLOCKM:  $%hx\n", cpu.sys_clock.m);
+    printf("SCLOCKT:  $%hx\n", cpu.sys_clock.t);
+    printf("ICLOCKM:  $%hx\n", cpu.ins_clock.m);
+    printf("ICLOCKT:  $%hx\n", cpu.ins_clock.t);
 }
 
 int main(void)
 {
+#ifdef _DEBUG
+
+    uint8_t prg[5] = {
+        0x3E, 0x01, 0x0E, 0x01, 0x81
+    };
+
+    mmu_t mem;
+    mem.ram = prg;
+
+    cpu.mmu = &mem;
+
+    cpu_run(20);
     print_cpu();
+
+#endif
+
     return 0;
 }
 
